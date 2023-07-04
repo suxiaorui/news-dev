@@ -3,14 +3,22 @@ package com.rui.user.controller;
 import com.rui.api.BaseController;
 import com.rui.api.controller.user.PassportControllerApi;
 import com.rui.grace.result.GraceJSONResult;
+import com.rui.grace.result.ResponseStatusEnum;
+import com.rui.pojo.bo.RegistLoginBO;
 import com.rui.utils.IPUtil;
 import com.rui.utils.SMSUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Author suxiaorui
@@ -51,4 +59,26 @@ public class PassportController extends BaseController implements PassportContro
 
         return GraceJSONResult.ok();
     }
+
+    @Override
+    public GraceJSONResult doLogin(RegistLoginBO registLoginBO, BindingResult result) {
+
+        // 判断BindingResult中是否保存了错误的验证信息，如果有，则需要返回
+        if (result.hasErrors()){
+            Map<String, String> map = getErrors(result);
+            return GraceJSONResult.errorMap(map);
+        }
+
+        String mobile = registLoginBO.getMobile();
+        String smsCode = registLoginBO.getSmsCode();
+
+        // 校验验证码是否匹配
+        String redisSMSCode = redis.get(MOBILE_SMSCODE + ":" + mobile);
+        if (StringUtils.isBlank(redisSMSCode) || !redisSMSCode.equalsIgnoreCase(smsCode)){
+            return GraceJSONResult.errorCustom(ResponseStatusEnum.SMS_CODE_ERROR);
+        }
+        return GraceJSONResult.ok();
+    }
+
+
 }
