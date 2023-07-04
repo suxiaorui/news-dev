@@ -32,10 +32,10 @@ public class HelloController implements HelloControllerApi {
         logger.error("error: hello~");
 
 //        return "hello";
-//        return RuiJSONResult.ok();
+        return RuiJSONResult.ok();
 //        return RuiJSONResult.ok("hello");
 //        return RuiJSONResult.errorMsg("您的信息有误~！");
-        return GraceJSONResult.errorCustom(ResponseStatusEnum.NO_AUTH);
+//        return GraceJSONResult.errorCustom(ResponseStatusEnum.NO_AUTH);
 
     }
 }
