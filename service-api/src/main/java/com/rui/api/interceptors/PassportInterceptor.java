@@ -1,5 +1,7 @@
 package com.rui.api.interceptors;
 
+import com.rui.exception.GraceException;
+import com.rui.grace.result.ResponseStatusEnum;
 import com.rui.utils.IPUtil;
 import com.rui.utils.RedisOperator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +33,8 @@ public class PassportInterceptor implements HandlerInterceptor {
         boolean keyIsExist = redis.keyIsExist(MOBILE_SMSCODE + ":" + userIp);
 
         if (keyIsExist) {
-            System.out.println("短信发送频率太大！");
+            GraceException.display(ResponseStatusEnum.SMS_NEED_WAIT_ERROR);
+//            System.out.println("短信发送频率太大！");
             return false;
             /**
              * false：请求被拦截
