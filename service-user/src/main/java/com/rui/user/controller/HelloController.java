@@ -1,6 +1,9 @@
 package com.rui.user.controller;
 
 import com.rui.api.controller.user.HelloControllerApi;
+import com.rui.grace.result.GraceJSONResult;
+import com.rui.grace.result.ResponseStatusEnum;
+import com.rui.grace.result.RuiJSONResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +31,11 @@ public class HelloController implements HelloControllerApi {
         logger.warn("warn: hello~");
         logger.error("error: hello~");
 
-        return "hello";
-//        return IMOOCJSONResult.ok();
-//        return IMOOCJSONResult.ok("hello");
-//        return IMOOCJSONResult.errorMsg("您的信息有误~！");
+//        return "hello";
+//        return RuiJSONResult.ok();
+//        return RuiJSONResult.ok("hello");
+//        return RuiJSONResult.errorMsg("您的信息有误~！");
+        return GraceJSONResult.errorCustom(ResponseStatusEnum.NO_AUTH);
 
     }
 }
