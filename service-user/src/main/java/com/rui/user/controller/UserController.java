@@ -11,6 +11,7 @@ import com.rui.pojo.bo.UpdateUserInfoBO;
 import com.rui.pojo.vo.AppUserVO;
 import com.rui.pojo.vo.UserAccountInfoVO;
 import com.rui.user.service.UserService;
+import com.rui.utils.JsonUtils;
 import com.rui.utils.RedisOperator;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -76,8 +77,17 @@ public class UserController extends BaseController implements UserControllerApi 
 
 
     private AppUser getUser(String userId){
-        // 后续再扩展
-        AppUser user = userService.getUser(userId);
+        // 查询判断redis中是否包含用户信息，如果包含，则查询后直接返回，就不去查询数据库了
+        String userJson = redis.get(REDIS_USER_INFO + ":" + userId);
+        AppUser user = null;
+        if (StringUtils.isNotBlank(userJson)) {
+            user = JsonUtils.jsonToPojo(userJson, AppUser.class);
+        } else {
+            user = userService.getUser(userId);
+            // 由于用户信息不怎么会变动，对于一些千万级别的网站来说，这类信息不会直接去查询数据库
+            // 那么完全可以依靠redis，直接把查询后的数据存入到redis中
+            redis.set(REDIS_USER_INFO + ":" + userId, JsonUtils.objectToJson(user));
+        }
         return user;
     }
 

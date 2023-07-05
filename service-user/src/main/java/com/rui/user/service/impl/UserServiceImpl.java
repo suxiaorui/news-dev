@@ -11,6 +11,7 @@ import com.rui.user.mapper.AppUserMapper;
 import com.rui.user.service.UserService;
 import com.rui.utils.DateUtil;
 import com.rui.utils.DesensitizationUtil;
+import com.rui.utils.JsonUtils;
 import com.rui.utils.RedisOperator;
 import org.n3r.idworker.Sid;
 import org.springframework.beans.BeanUtils;
@@ -41,6 +42,8 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     public RedisOperator redis;
+
+    public static final String REDIS_USER_INFO = "redis_user_info";
 
     private static final String USER_FACE0 = "http://pic.imeitou.com/uploads/allimg/230704/10-230F41A553.jpg";
     private static final String USER_FACE1 = "http://pic.imeitou.com/uploads/allimg/230704/10-230F41A040.jpg";
@@ -95,6 +98,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateUserInfo(UpdateUserInfoBO updateUserInfoBO) {
 
+        String userId = updateUserInfoBO.getId();
+
         AppUser userInfo = new AppUser();
         BeanUtils.copyProperties(updateUserInfoBO,userInfo);
 
@@ -105,6 +110,10 @@ public class UserServiceImpl implements UserService {
         if (result != 1){
             GraceException.display(ResponseStatusEnum.USER_UPDATE_ERROR);
         }
+
+        // 再次查询用户的最新信息，放入redis中
+        AppUser user = getUser(userId);
+        redis.set(REDIS_USER_INFO + ":" + userId, JsonUtils.objectToJson(user));
 
     }
 
