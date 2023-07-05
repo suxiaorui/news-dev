@@ -8,6 +8,7 @@ import com.rui.grace.result.ResponseStatusEnum;
 import com.rui.grace.result.RuiJSONResult;
 import com.rui.pojo.AppUser;
 import com.rui.pojo.bo.UpdateUserInfoBO;
+import com.rui.pojo.vo.AppUserVO;
 import com.rui.pojo.vo.UserAccountInfoVO;
 import com.rui.user.service.UserService;
 import com.rui.utils.RedisOperator;
@@ -37,6 +38,23 @@ public class UserController extends BaseController implements UserControllerApi 
 
     @Autowired
     private UserService userService;
+
+    @Override
+    public GraceJSONResult getUserInfo(String userId) {
+        // 判断参数不能为空
+        if (StringUtils.isBlank(userId)){
+            return GraceJSONResult.errorCustom(ResponseStatusEnum.UN_LOGIN);
+        }
+
+        // 根据userId查询用户的信息
+        AppUser user = getUser(userId);
+
+        // 返回用户信息
+        AppUserVO userVO = new AppUserVO();
+        BeanUtils.copyProperties(user,userVO);
+
+        return GraceJSONResult.ok(userVO);
+    }
 
     @Override
     public GraceJSONResult getAccountInfo(String userId) {
