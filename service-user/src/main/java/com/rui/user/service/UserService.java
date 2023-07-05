@@ -1,8 +1,7 @@
 package com.rui.user.service;
 
 import com.rui.pojo.AppUser;
-
-
+import com.rui.pojo.bo.UpdateUserInfoBO;
 
 
 /**
@@ -28,6 +27,11 @@ public interface UserService {
      * 根据用户主键id查询用户信息
      */
     public AppUser getUser(String userId);
+
+    /**
+     * 用户修改信息，完善资料，并且激活
+     */
+    public void updateUserInfo(UpdateUserInfoBO updateUserInfoBO);
 
 
 

@@ -2,13 +2,18 @@ package com.rui.user.service.impl;
 
 import com.rui.enums.Sex;
 import com.rui.enums.UserStatus;
+import com.rui.exception.GraceException;
+import com.rui.grace.result.GraceJSONResult;
+import com.rui.grace.result.ResponseStatusEnum;
 import com.rui.pojo.AppUser;
+import com.rui.pojo.bo.UpdateUserInfoBO;
 import com.rui.user.mapper.AppUserMapper;
 import com.rui.user.service.UserService;
 import com.rui.utils.DateUtil;
 import com.rui.utils.DesensitizationUtil;
 import com.rui.utils.RedisOperator;
 import org.n3r.idworker.Sid;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -85,6 +90,22 @@ public class UserServiceImpl implements UserService {
     @Override
     public AppUser getUser(String userId) {
         return appUserMapper.selectByPrimaryKey(userId);
+    }
+
+    @Override
+    public void updateUserInfo(UpdateUserInfoBO updateUserInfoBO) {
+
+        AppUser userInfo = new AppUser();
+        BeanUtils.copyProperties(updateUserInfoBO,userInfo);
+
+        userInfo.setUpdatedTime(new Date());
+        userInfo.setActiveStatus(UserStatus.ACTIVE.type);
+
+        int result =  appUserMapper.updateByPrimaryKeySelective(userInfo);
+        if (result != 1){
+            GraceException.display(ResponseStatusEnum.USER_UPDATE_ERROR);
+        }
+
     }
 
 }

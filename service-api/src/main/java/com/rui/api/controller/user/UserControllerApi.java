@@ -2,6 +2,7 @@ package com.rui.api.controller.user;
 
 import com.rui.grace.result.GraceJSONResult;
 import com.rui.pojo.bo.RegistLoginBO;
+import com.rui.pojo.bo.UpdateUserInfoBO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.validation.BindingResult;
@@ -27,12 +28,10 @@ public interface UserControllerApi {
     public GraceJSONResult getAccountInfo(@RequestParam String userId);
 
 
-//    @ApiOperation(value = "一键注册登录接口", notes = "一键注册登录接口", httpMethod = "POST")
-//    @PostMapping("/doLogin")
-//    public GraceJSONResult doLogin(@RequestBody @Valid RegistLoginBO registLoginBO,
-//                                   BindingResult result,
-//                                   HttpServletRequest request,
-//                                   HttpServletResponse response);
+    @ApiOperation(value = "修改/完善用户信息", notes = "修改/完善用户信息", httpMethod = "POST")
+    @PostMapping("/updateUserInfo")
+    public GraceJSONResult updateUserInfo(@RequestBody @Valid UpdateUserInfoBO updateUserInfoBO,
+                                   BindingResult result);
 
 
 }
