@@ -17,6 +17,7 @@ public class BaseInterceptor {
     @Autowired
     public RedisOperator redis;
 
+    public static final String REDIS_USER_INFO = "redis_user_info";
     public static final String REDIS_USER_TOKEN = "redis_user_token";
 
     public boolean verifyUserIdToken(String id,
