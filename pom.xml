@@ -53,7 +53,6 @@
     <dependencyManagement>
         <dependencies>
 
-
             <!-- 引入 mongodb 依赖 -->
             <dependency>
                 <groupId>org.mongodb</groupId>
@@ -68,26 +67,29 @@
                 <artifactId>mysql-connector-java</artifactId>
                 <version>${mysql-connector-java.version}</version>
             </dependency>
-
             <!-- mybatis -->
             <dependency>
                 <groupId>org.mybatis.spring.boot</groupId>
                 <artifactId>mybatis-spring-boot-starter</artifactId>
                 <version>${mybatis-spring-boot-starter.version}</version>
             </dependency>
-
             <!-- 通用mapper逆向工具 -->
             <dependency>
                 <groupId>tk.mybatis</groupId>
                 <artifactId>mapper-spring-boot-starter</artifactId>
                 <version>${mapper-spring-boot-starter.version}</version>
             </dependency>
-
             <!--pagehelper -->
             <dependency>
                 <groupId>com.github.pagehelper</groupId>
                 <artifactId>pagehelper-spring-boot-starter</artifactId>
                 <version>${pagehelper-spring-boot-starter.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.squareup.okhttp3</groupId>
+                <artifactId>okhttp</artifactId>
+                <version>${okhttp.version}</version>
             </dependency>
 
             <!-- jackson -->
@@ -130,6 +132,7 @@
                 <artifactId>guava</artifactId>
                 <version>${google-guava.version}</version>
             </dependency>
+
             <!-- swagger2 配置 -->
             <dependency>
                 <groupId>io.springfox</groupId>
@@ -146,6 +149,7 @@
                 <artifactId>swagger-bootstrap-ui</artifactId>
                 <version>${swagger-bootstrap-ui.version}</version>
             </dependency>
+
             <!-- 文件上传fdfs工具 -->
             <dependency>
                 <groupId>com.github.tobato</groupId>
@@ -159,6 +163,7 @@
                 <artifactId>joda-time</artifactId>
                 <version>${joda-time.version}</version>
             </dependency>
+
         </dependencies>
     </dependencyManagement>
 

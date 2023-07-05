@@ -18,7 +18,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @Author suxiaorui
@@ -63,8 +65,12 @@ public class PassportController extends BaseController implements PassportContro
         return GraceJSONResult.ok();
     }
 
+
     @Override
-    public GraceJSONResult doLogin(RegistLoginBO registLoginBO, BindingResult result) {
+    public GraceJSONResult doLogin(RegistLoginBO registLoginBO,
+                                   BindingResult result,
+                                   HttpServletRequest request,
+                                   HttpServletResponse response) {
 
         // 判断BindingResult中是否保存了错误的验证信息，如果有，则需要返回
         if (result.hasErrors()){
@@ -91,7 +97,24 @@ public class PassportController extends BaseController implements PassportContro
             user = userService.createUser(mobile);
         }
 
-        return GraceJSONResult.ok(user);
+        // 保存用户分布式会话的相关操作
+        int userActiveStatus = user.getActiveStatus();
+        if (userActiveStatus != UserStatus.FROZEN.type){
+            // 保存token到redis
+            String uToken = UUID.randomUUID().toString();
+            redis.set(REDIS_USER_TOKEN + ":" + user.getId(), uToken);
+
+            //保存用户id和token到cookie中
+            setCookie(request,response,"utoken",uToken,COOKIE_MONTH);
+            setCookie(request,response,"uid",user.getId(),COOKIE_MONTH);
+        }
+
+        // 用户注册或登录成功后，需要删除redis中的短信验证码，只能用一次，用过之后就作废了
+        redis.del(MOBILE_SMSCODE + ":" + mobile);
+
+        // 返回用户状态
+        System.out.println(userActiveStatus);
+        return GraceJSONResult.ok(userActiveStatus);
     }
 
 }
