@@ -2,6 +2,7 @@ package com.rui.api;
 
 import com.rui.utils.RedisOperator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
@@ -30,6 +31,8 @@ public class BaseController {
     public static final String MOBILE_SMSCODE = "mobile:smscode";
     public static final String REDIS_USER_TOKEN = "redis_user_token";
 
+    @Value("${website.domain-name}")
+    private String DOMAIN_NAME;
     public static final Integer COOKIE_MONTH = 30 * 24 * 60 * 60;
 
     // 获取BO中的错误信息
@@ -74,7 +77,8 @@ public class BaseController {
 
             Cookie cookie = new Cookie(cookieName,cookieValue);
             cookie.setMaxAge(maxAge);
-            cookie.setDomain("imoocnews.com");
+//            cookie.setDomain("imoocnews.com");
+            cookie.setDomain(DOMAIN_NAME);
             cookie.setPath("/");
             response.addCookie(cookie);
         }
