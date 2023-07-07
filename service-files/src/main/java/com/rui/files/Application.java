@@ -16,6 +16,7 @@ import java.util.Date;
  * @Date 2023/7/4 17:26
  * @Version 1.0
  */
+@ComponentScan( basePackages = {"com.rui", "org.n3r.idworker"})
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class,MongoAutoConfiguration.class, MongoDataAutoConfiguration.class} )
 public class Application {
     public static void main(String[] args) {
