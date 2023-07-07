@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 
 @RestController
-public class HelloController implements HelloControllerApi {
+public class    HelloController implements HelloControllerApi {
 
     final static Logger logger = LoggerFactory.getLogger(HelloController.class);
 

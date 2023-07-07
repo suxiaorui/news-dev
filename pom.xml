@@ -13,6 +13,7 @@
         <module>model</module>
         <module>service-api</module>
         <module>service-user</module>
+        <module>service-files</module>
     </modules>
 
 
