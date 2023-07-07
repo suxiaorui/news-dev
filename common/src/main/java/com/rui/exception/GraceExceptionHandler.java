@@ -26,4 +26,13 @@ public class GraceExceptionHandler {
         e.printStackTrace();
         return GraceJSONResult.exception(e.getResponseStatusEnum());
     }
+
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    @ResponseBody
+    public GraceJSONResult returnMaxUploadSizeExceededException(MaxUploadSizeExceededException e) {
+        return GraceJSONResult.errorCustom(ResponseStatusEnum.FILE_MAX_SIZE_ERROR);
+    }
+
+
 }
