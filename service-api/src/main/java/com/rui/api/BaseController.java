@@ -3,6 +3,7 @@ package com.rui.api;
 import com.rui.utils.RedisOperator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.propertyeditors.FileEditor;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
@@ -31,6 +32,7 @@ public class BaseController {
     public static final String MOBILE_SMSCODE = "mobile:smscode";
     public static final String REDIS_USER_TOKEN = "redis_user_token";
     public static final String REDIS_USER_INFO = "redis_user_info";
+    public static final String REDIS_ADMIN_TOKEN = "redis_admin_token";
 
     @Value("${website.domain-name}")
     private String DOMAIN_NAME;
@@ -83,6 +85,19 @@ public class BaseController {
             cookie.setDomain(DOMAIN_NAME);
             cookie.setPath("/");
             response.addCookie(cookie);
+    }
+
+    public Map<String,String> getErrorsFromBindingResult(BindingResult result){
+        Map<String,String> map = new HashMap<>();
+        List<FieldError> errorList = result.getFieldErrors();
+        for (FieldError error : errorList){
+            String field = error.getField();
+            String msg = error.getDefaultMessage();
+            map.put(field,msg);
         }
+        return map;
+    }
+
+
 
 }
