@@ -1,6 +1,7 @@
 package com.rui.admin.service;
 
 import com.rui.pojo.AdminUser;
+import com.rui.pojo.bo.NewAdminBO;
 
 /**
  * @Author suxiaorui
@@ -19,4 +20,9 @@ public interface AdminUserService {
     public AdminUser queryAdminByUsername(String username);
 
 
+
+    /**
+     * 新增admin管理员账号；
+     */
+    void createAdminUser(NewAdminBO newAdminBO);
 }

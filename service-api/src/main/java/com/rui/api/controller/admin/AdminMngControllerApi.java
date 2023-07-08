@@ -2,6 +2,7 @@ package com.rui.api.controller.admin;
 
 import com.rui.grace.result.GraceJSONResult;
 import com.rui.pojo.bo.AdminLoginBO;
+import com.rui.pojo.bo.NewAdminBO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.validation.BindingResult;
@@ -50,8 +51,22 @@ public interface AdminMngControllerApi {
     public GraceJSONResult adminIsExist(@RequestParam String username);
 
 
-    
 
+    /**
+     *【新增admin账号，接口】
+     * @param newAdminBO :NewAdminBO，来承接创建管理员用户时的信息；
+     * @param result
+     * @param request
+     * @param response
+     * @return
+     */
+
+    @ApiOperation(value = "创建admin账号", notes = "创建admin账号", httpMethod = "POST")
+    @PostMapping("/addNewAdmin") //设置路由，这个是需要前后端约定好的；
+    public GraceJSONResult addNewAdmin(@RequestBody @Valid NewAdminBO newAdminBO,
+                                       BindingResult result,
+                                       HttpServletRequest request,
+                                       HttpServletResponse response);
 
 
 

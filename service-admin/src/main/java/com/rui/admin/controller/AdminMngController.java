@@ -8,7 +8,9 @@ import com.rui.grace.result.GraceJSONResult;
 import com.rui.grace.result.ResponseStatusEnum;
 import com.rui.pojo.AdminUser;
 import com.rui.pojo.bo.AdminLoginBO;
+import com.rui.pojo.bo.NewAdminBO;
 import com.rui.utils.RedisOperator;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,6 +110,46 @@ public class AdminMngController extends BaseController implements AdminMngContro
     @Override
     public GraceJSONResult adminIsExist(String username) {
         checkAdminExist(username);//【判断admin用户名，是否已存在】的逻辑，单独抽成了一个方法；
+        return GraceJSONResult.ok();
+    }
+
+    @Override
+    public GraceJSONResult addNewAdmin(NewAdminBO newAdminBO, BindingResult result, HttpServletRequest request, HttpServletResponse response) {
+
+        /**
+         * 0. BindingResult中是否保存了验证失败的错误信息，如果有，说明前端的输入是有问题的，比如登录名、负责人名等没有输入)；
+         * 那么，就获取这个错误信息，并构建一个GraceJSONResult统一返回对象，返回；
+         */
+        if (result.hasErrors()) {
+            Map<String, String> map = getErrorsFromBindingResult(result);
+            return GraceJSONResult.errorMap(map);
+        }
+
+        // 1. 如果img64为空，就表示前端不是人脸入库; 那么，就一定需要password和confirmPassword;
+        if (StringUtils.isBlank(newAdminBO.getImg64())) {
+            // 1.1 如果此时，password和confirmPassword但凡有一个为空，就返回一个内容是"密码不能为空！"的GraceJSONResult；
+            if (StringUtils.isBlank(newAdminBO.getPassword()) ||
+                    StringUtils.isBlank(newAdminBO.getConfirmPassword())) {
+                return GraceJSONResult.errorCustom(ResponseStatusEnum.ADMIN_PASSWORD_NULL_ERROR);
+            }
+        }
+
+
+        // 2. 如果password不为空，那么password和confirmPassword必须要一致；
+        if (StringUtils.isNotBlank(newAdminBO.getPassword())) {
+            // 2.1 如果此时，password和confirmPassword不一致，就返回一个内容是"密码不能为空或者两次输入不一致！"的GraceJSONResult;
+            if (!newAdminBO.getPassword().equalsIgnoreCase(newAdminBO.getConfirmPassword())) {
+                return GraceJSONResult.errorCustom(ResponseStatusEnum.ADMIN_PASSWORD_ERROR);
+            }
+        }
+
+        // 3.因为admin_user表的username不允许重复（即，管理员的用户名不允许重复）；所以我们需要去校验一下，admin用户名，是否已存在；
+        checkAdminExist(newAdminBO.getUsername());
+
+        // 4.调用Service层的方法，去新增管理员
+        adminUserService.createAdminUser(newAdminBO);
+
+        // 5.如果能执行到这儿，说明上面一切OK；就返回一个OK的GraceJSONResult;
         return GraceJSONResult.ok();
     }
 
