@@ -3,6 +3,7 @@ package com.rui.admin.controller;
 import com.rui.admin.service.AdminUserService;
 import com.rui.api.BaseController;
 import com.rui.api.controller.admin.AdminMngControllerApi;
+import com.rui.exception.GraceException;
 import com.rui.grace.result.GraceJSONResult;
 import com.rui.grace.result.ResponseStatusEnum;
 import com.rui.pojo.AdminUser;
@@ -95,6 +96,32 @@ public class AdminMngController extends BaseController implements AdminMngContro
         setCookie(request, response, "atoken", token, COOKIE_MONTH);
         setCookie(request, response, "aid", admin.getId(), COOKIE_MONTH);
         setCookie(request, response, "aname", admin.getAdminName(), COOKIE_MONTH);
+    }
+
+
+
+    /**
+     * 查询admin用户名，是否已存在;
+     * @param username
+     * @return
+     */
+    @Override
+    public GraceJSONResult adminIsExist(String username) {
+        checkAdminExist(username);//【判断admin用户名，是否已存在】的逻辑，单独抽成了一个方法；
+        return GraceJSONResult.ok();
+    }
+
+    /**
+     * 工具方法：判断admin用户名，是否已存在；
+     * @param username
+     */
+    private void checkAdminExist(String username) {
+        // 1.调用Service层的方法，根据用户名，尝试去数据库中查，看是否有这个用户；
+        AdminUser adminUser = adminUserService.queryAdminByUsername(username);
+        if (adminUser != null) {
+            //如果该管理员name已存在，直接抛一个包含"管理员登录名已存在！"信息的MyCustomException自定义异常；
+            GraceException.display(ResponseStatusEnum.ADMIN_USERNAME_EXIST_ERROR);
+        }
     }
 
 }

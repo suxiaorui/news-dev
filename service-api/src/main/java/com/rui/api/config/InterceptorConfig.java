@@ -1,8 +1,10 @@
 package com.rui.api.config;
 
+import com.rui.api.interceptors.AdminTokenInterceptor;
 import com.rui.api.interceptors.PassportInterceptor;
 import com.rui.api.interceptors.UserActiveInterceptor;
 import com.rui.api.interceptors.UserTokenInterceptor;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -33,6 +35,10 @@ public class InterceptorConfig implements WebMvcConfigurer {
         return new UserActiveInterceptor();
     }
 
+    @Bean
+    public AdminTokenInterceptor adminTokenInterceptor(){
+        return new AdminTokenInterceptor();
+    }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -47,6 +53,10 @@ public class InterceptorConfig implements WebMvcConfigurer {
 
 //        registry.addInterceptor(userActiveInterceptor())
 //                .addPathPatterns("/user/getAccountInfo");
+
+        // 【查询admin用户名是否已存在，接口】是需要登录才能操作的；
+        registry.addInterceptor(adminTokenInterceptor())
+                .addPathPatterns("/adminMng/adminIsExist");
 
     }
 }

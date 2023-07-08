@@ -8,6 +8,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,7 +40,17 @@ public interface AdminMngControllerApi {
                                       HttpServletRequest request,
                                       HttpServletResponse response);
 
+    /**
+     * 查询admin用户名，是否已存在;
+     * @param username
+     * @return
+     */
+    @ApiOperation(value = "查询admin用户名，是否已存在", notes = "查询admin用户名，是否已存在", httpMethod = "POST")
+    @PostMapping("/adminIsExist") //设置路由，这个是需要前后端约定好的；
+    public GraceJSONResult adminIsExist(@RequestParam String username);
 
+
+    
 
 
 
