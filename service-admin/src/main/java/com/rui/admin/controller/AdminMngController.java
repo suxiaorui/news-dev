@@ -9,6 +9,7 @@ import com.rui.grace.result.ResponseStatusEnum;
 import com.rui.pojo.AdminUser;
 import com.rui.pojo.bo.AdminLoginBO;
 import com.rui.pojo.bo.NewAdminBO;
+import com.rui.utils.PagedGridResult;
 import com.rui.utils.RedisOperator;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -153,6 +154,32 @@ public class AdminMngController extends BaseController implements AdminMngContro
         return GraceJSONResult.ok();
     }
 
+
+    /**
+     * 【分页查询admin账号列表，接口】;
+     *
+     * @param page：想要查询第几页；
+     * @param pageSize：每一页的条目数；
+     * @return
+     */
+    @Override
+    public GraceJSONResult getAdminList(Integer page, Integer pageSize) {
+
+        //如果前端在请求这个接口的时候，没有传page参数；那么我们就给其一个默认值1；
+        if (page == null) {
+            page = COMMON_START_PAGE;
+        }
+        //如果前端在请求这个接口的时候，没有传pageSize参数；那么我们就给其一个默认值10；
+        if (pageSize == null) {
+            pageSize = COMMON_PAGE_SIZE;
+        }
+
+        //调用service层的逻辑，去查询分页数据；
+        PagedGridResult result = adminUserService.queryAdminList(page, pageSize);
+        return GraceJSONResult.ok(result);
+    }
+
+
     /**
      * 工具方法：判断admin用户名，是否已存在；
      * @param username
@@ -165,5 +192,4 @@ public class AdminMngController extends BaseController implements AdminMngContro
             GraceException.display(ResponseStatusEnum.ADMIN_USERNAME_EXIST_ERROR);
         }
     }
-
 }

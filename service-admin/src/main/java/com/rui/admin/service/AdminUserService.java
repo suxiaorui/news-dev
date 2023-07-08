@@ -2,6 +2,7 @@ package com.rui.admin.service;
 
 import com.rui.pojo.AdminUser;
 import com.rui.pojo.bo.NewAdminBO;
+import com.rui.utils.PagedGridResult;
 
 /**
  * @Author suxiaorui
@@ -24,5 +25,12 @@ public interface AdminUserService {
     /**
      * 新增admin管理员账号；
      */
-    void createAdminUser(NewAdminBO newAdminBO);
+    public void createAdminUser(NewAdminBO newAdminBO);
+
+    /**
+     * 分页查询列表；
+     */
+
+    public PagedGridResult queryAdminList(Integer page, Integer pageSize);
+
 }

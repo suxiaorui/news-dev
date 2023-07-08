@@ -5,6 +5,7 @@ import com.rui.pojo.bo.AdminLoginBO;
 import com.rui.pojo.bo.NewAdminBO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -68,6 +69,17 @@ public interface AdminMngControllerApi {
                                        HttpServletRequest request,
                                        HttpServletResponse response);
 
-
-
+    /**
+     * 【分页查询admin账号列表，接口】;
+     *
+     * @param page：想要查询第几页；
+     * @param pageSize：每一页的条目数；
+     * @return
+     */
+    @ApiOperation(value = "查询admin列表", notes = "查询admin列表", httpMethod = "POST")
+    @PostMapping("/getAdminList") //设置路由，这个是需要前后端约定好的；
+    public GraceJSONResult getAdminList(@RequestParam @ApiParam(name = "page", value = "想要查询第几页", required = false)
+                                                Integer page,
+                                        @RequestParam @ApiParam(name = "pageSize", value = "每一页的条目数", required = false)
+                                                Integer pageSize);
 }
