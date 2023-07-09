@@ -192,4 +192,29 @@ public class AdminMngController extends BaseController implements AdminMngContro
             GraceException.display(ResponseStatusEnum.ADMIN_USERNAME_EXIST_ERROR);
         }
     }
+
+
+    /**
+     * 【admin管理员退出登录，接口】;
+     * @param adminId
+     * @param request
+     * @param response
+     * @return
+     */
+    @Override
+    public GraceJSONResult adminLogout(String adminId,
+                                       HttpServletRequest request, HttpServletResponse response) {
+
+
+        // 从redis中删除admin的会话token
+        redis.del(REDIS_ADMIN_TOKEN + ":" + adminId);
+
+        // 从cookie中清理adming登录的相关信息
+        deleteCookie(request, response, "atoken");
+        deleteCookie(request, response, "aid");
+        deleteCookie(request, response, "aname");
+
+        return GraceJSONResult.ok();
+    }
+
 }

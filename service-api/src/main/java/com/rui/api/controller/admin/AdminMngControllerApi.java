@@ -82,4 +82,18 @@ public interface AdminMngControllerApi {
                                                 Integer page,
                                         @RequestParam @ApiParam(name = "pageSize", value = "每一页的条目数", required = false)
                                                 Integer pageSize);
+
+
+    /**
+     * 【admin管理员退出登录，接口】;
+     * @param adminId
+     * @param request
+     * @param response
+     * @return
+     */
+    @ApiOperation(value = "admin管理员退出登录", notes = "admin管理员退出登录", httpMethod = "POST")
+    @PostMapping("/adminLogout") //设置路由，这个是需要前后端约定好的；
+    public GraceJSONResult adminLogout(@RequestParam String adminId,
+                                       HttpServletRequest request,
+                                       HttpServletResponse response);
 }
