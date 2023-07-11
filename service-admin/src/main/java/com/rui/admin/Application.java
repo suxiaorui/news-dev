@@ -14,7 +14,7 @@ import tk.mybatis.spring.annotation.MapperScan;
  * @Version 1.0
  */
 
-@SpringBootApplication(exclude = {MongoAutoConfiguration.class} )
+@SpringBootApplication
 @MapperScan(basePackages = "com.rui.admin.mapper")
 @ComponentScan( basePackages = {"com.rui", "org.n3r.idworker"})
 public class Application {
