@@ -17,7 +17,7 @@ import java.util.Date;
  * @Version 1.0
  */
 @ComponentScan( basePackages = {"com.rui", "org.n3r.idworker"})
-@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class,MongoAutoConfiguration.class, MongoDataAutoConfiguration.class} )
+@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class} )
 public class Application {
     public static void main(String[] args) {
         SpringApplication.run(Application.class,args);

@@ -56,7 +56,11 @@ public class InterceptorConfig implements WebMvcConfigurer {
 
         // 【查询admin用户名是否已存在，接口】是需要登录才能操作的；
         registry.addInterceptor(adminTokenInterceptor())
-                .addPathPatterns("/adminMng/adminIsExist");
+                .addPathPatterns("/adminMng/adminIsExist")
+                .addPathPatterns("/adminMng/addNewAdmin")
+                .addPathPatterns("/adminMng/getAdminList")
+                .addPathPatterns("/fs/uploadToGridFS")
+                .addPathPatterns("/fs/readInGridFS");
 
     }
 }

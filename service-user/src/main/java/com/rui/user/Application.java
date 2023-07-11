@@ -13,7 +13,7 @@ import org.springframework.context.annotation.ComponentScan;
  * @Date 2023/7/4 17:26
  * @Version 1.0
  */
-@SpringBootApplication(exclude = {MongoAutoConfiguration.class, MongoDataAutoConfiguration.class} )
+@SpringBootApplication(exclude = {MongoAutoConfiguration.class} )
 @MapperScan(basePackages = "com.rui.user.mapper")
 @ComponentScan( basePackages = {"com.rui", "org.n3r.idworker"})
 public class Application {

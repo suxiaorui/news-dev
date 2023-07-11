@@ -26,6 +26,10 @@ spring:
     multipart:
       max-file-size: 512000
       max-request-size: 512000
+  data:
+    mongodb:
+      uri: mongodb://root:root@192.168.47.132:27017
+      database: rui-news
 
 ############################################################
 #
