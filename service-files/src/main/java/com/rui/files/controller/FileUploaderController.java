@@ -136,6 +136,8 @@ public class FileUploaderController implements FileUploaderControllerApi {
 
     }
 
+
+
     private File readGridFSByFaceId(String faceId) throws Exception {
 
         /**
@@ -177,6 +179,23 @@ public class FileUploaderController implements FileUploaderControllerApi {
         gridFSBucket.downloadToStream(new ObjectId(faceId), os);//downloadToStream()方法有其他的重构方式，利用其他的重构的方法也是可以的;
         // 6. 返回该文件，在本地服务器的file对象；
         return myFile;
+
+    }
+
+    @Override
+    public GraceJSONResult readFace64InGridFS(String faceId,
+                                              HttpServletRequest request,
+                                              HttpServletResponse response)
+            throws Exception {
+
+        // 0. 获得gridfs中人脸文件
+        File myface = readGridFSByFaceId(faceId);
+
+        // 1. 转换人脸为base64
+        String base64Face = FileUtils.fileToBase64(myface);
+
+        return GraceJSONResult.ok(base64Face);
+
 
     }
 
