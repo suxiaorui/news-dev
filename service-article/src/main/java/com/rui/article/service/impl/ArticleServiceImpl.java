@@ -2,6 +2,7 @@ package com.rui.article.service.impl;
 
 import com.rui.api.service.BaseService;
 import com.rui.article.mapper.ArticleMapper;
+import com.rui.article.mapper.ArticleMapperCustom;
 import com.rui.article.service.ArticleService;
 import com.rui.enums.ArticleAppointType;
 import com.rui.enums.ArticleReviewStatus;
@@ -15,6 +16,7 @@ import org.n3r.idworker.Sid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.management.GarbageCollectorMXBean;
 import java.util.Date;
@@ -33,8 +35,12 @@ public class ArticleServiceImpl extends BaseService implements ArticleService {
     private ArticleMapper articleMapper;
 
     @Autowired
+    private ArticleMapperCustom articleMapperCustom;
+
+    @Autowired
     private Sid sid;  //新增文章时，article表的主键，利用Sid生成；
 
+    @Transactional
     @Override
     public void createArticle(NewArticleBO newArticleBO, Category category) {
 
@@ -70,4 +76,14 @@ public class ArticleServiceImpl extends BaseService implements ArticleService {
 
 
     }
+
+    @Transactional
+    @Override
+    public void updateAppointToPublish() {
+
+        articleMapperCustom.updateAppointToPublish();
+
+    }
 }
+
+

@@ -18,4 +18,10 @@ public interface ArticleService {
      */
     public void createArticle(NewArticleBO newArticleBO, Category category);
 
+
+    /**
+     * 更新定时发布为即时发布
+     */
+    public void updateAppointToPublish();
+
 }
