@@ -49,10 +49,11 @@ public class InterceptorConfig implements WebMvcConfigurer {
         registry.addInterceptor(userTokenInterceptor())
                 .addPathPatterns("/user/getAccountInfo")
                 .addPathPatterns("/user/updateUserInfo")
-                .addPathPatterns("/fs/uploadFace");
+                .addPathPatterns("/fs/uploadFace")
+                .addPathPatterns("/fs/uploadSomeFiles");
 
-//        registry.addInterceptor(userActiveInterceptor())
-//                .addPathPatterns("/user/getAccountInfo");
+        registry.addInterceptor(userActiveInterceptor())
+                .addPathPatterns("/user/getAccountInfo");
 
         // 【查询admin用户名是否已存在，接口】是需要登录才能操作的；
         registry.addInterceptor(adminTokenInterceptor())

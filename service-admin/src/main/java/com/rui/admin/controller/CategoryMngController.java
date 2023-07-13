@@ -85,8 +85,10 @@ public class CategoryMngController extends BaseController implements CategoryMng
         List<Category> categoryList = null;
         if (StringUtils.isBlank(allCatJson)) {
             categoryList = categoryService.queryCategoryList();
+            //调用JsonUtils工具类的方法：把List<Category>数据，转成JSON;
             redis.set(REDIS_ALL_CATEGORY, JsonUtils.objectToJson(categoryList));
         } else {
+            //调用JsonUtils工具类的方法：把JSON数据，转成List<Category>;
             categoryList = JsonUtils.jsonToList(allCatJson, Category.class);
         }
 

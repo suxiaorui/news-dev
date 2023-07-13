@@ -37,6 +37,18 @@ public interface FileUploaderControllerApi {
 
 
     /**
+     * 【多文件文件，接口】
+     * @param userId:用户id;
+     * @param files:前端传过来的文件;
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/uploadSomeFiles") //设置路由，这个是需要前后端约定好的；
+    public GraceJSONResult uploadSomeFiles(@RequestParam("userId") String userId,
+                                           MultipartFile[] files) throws Exception;
+
+
+    /**
      * 【文件上传到MongoDB的GridFS】
      * （1）和【AdminMngControllerApi中的，新增admin账号，接口】一样；我们还是使用NewAdminBO来承接
      * 前端传过来的参数；然后，具体的人脸数据会存在NewAdminBO的img64属性中；(PS:后端之所以可以这么干，前端肯定做了对应的设置的)

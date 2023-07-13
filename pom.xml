@@ -15,6 +15,7 @@
         <module>service-user</module>
         <module>service-files</module>
         <module>service-admin</module>
+        <module>service-article</module>
     </modules>
 
 
