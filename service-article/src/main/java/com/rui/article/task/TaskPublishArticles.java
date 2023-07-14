@@ -16,8 +16,8 @@ import java.time.LocalDateTime;
  */
 
 
-@Configuration      // 1. 标记配置类，使得springboot容器扫描到
-@EnableScheduling   // 2. 开启定时任务
+//@Configuration      // 1. 标记配置类，使得springboot容器扫描到
+//@EnableScheduling   // 2. 开启定时任务
 public class TaskPublishArticles {
 
     @Autowired

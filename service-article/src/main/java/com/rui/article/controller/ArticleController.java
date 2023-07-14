@@ -4,11 +4,14 @@ import com.rui.api.BaseController;
 import com.rui.api.controller.article.ArticleControllerApi;
 import com.rui.article.service.ArticleService;
 import com.rui.enums.ArticleCoverType;
+import com.rui.enums.ArticleReviewStatus;
+import com.rui.enums.YesOrNo;
 import com.rui.grace.result.GraceJSONResult;
 import com.rui.grace.result.ResponseStatusEnum;
 import com.rui.pojo.Category;
 import com.rui.pojo.bo.NewArticleBO;
 import com.rui.utils.JsonUtils;
+import com.rui.utils.PagedGridResult;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +19,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -103,5 +107,94 @@ public class ArticleController extends BaseController implements ArticleControll
         return GraceJSONResult.ok();
 
 
+    }
+
+    @Override
+    public GraceJSONResult queryMyList(String userId,
+                                       String keyword,
+                                       Integer status,
+                                       Date startDate,
+                                       Date endDate,
+                                       Integer page,
+                                       Integer pageSize) {
+
+        // 1.如果前端传的userId为空； 就返回一个信息是"文章列表查询参数错误！"的GraceJSONResult;
+        if (StringUtils.isBlank(userId)) {
+            return GraceJSONResult.errorCustom(ResponseStatusEnum.ARTICLE_QUERY_PARAMS_ERROR);
+        }
+
+        // 2.如果前端传的page或者pageSize为空，我们就给其设置默认值，page设为1，pageSize设为10；
+        if (page == null) {
+            page = COMMON_START_PAGE; //在BaseController中定义的常量；
+        }
+        if (pageSize == null) {
+            pageSize = COMMON_PAGE_SIZE;
+        }
+
+        // 3.调用Service层逻辑，去查询文章列表；
+        PagedGridResult pagedGridResult = articleService.queryMyArticleList(userId, keyword, status, startDate, endDate, page, pageSize);
+
+        // 4.把"根据前端要求，包装好的pagedGridResult对象"，返回给前端；
+        return GraceJSONResult.ok(pagedGridResult);
+    }
+
+
+    /**
+     * 后台的，根据条件，管理员查询所有用户的，文章列表，接口；
+     * @param status：一个查询条件：文章的状态；（可以为空）
+     * @param page：分页查询，当前页码；
+     * @param pageSize：每页条目数
+     * @return
+     */
+    @Override
+    public GraceJSONResult queryAllList(Integer status, Integer page, Integer pageSize) {
+        // 1.如果前端传的page或者pageSize为空，我们就给其设置默认值，page设为1，pageSize设为10；
+        if (page == null) {
+            page = COMMON_START_PAGE; //在BaseController中定义的常量；
+        }
+        if (pageSize == null) {
+            pageSize = COMMON_PAGE_SIZE;
+        }
+
+        // 3.调用Service层逻辑，去查询文章列表；
+        PagedGridResult pagedGridResult = articleService.queryAllArticleListAdmin(status,page,pageSize
+        );
+
+        // 4.把"根据前端要求，包装好的pagedGridResult对象"，返回给前端；
+        return GraceJSONResult.ok(pagedGridResult);
+    }
+
+    @Override
+    public GraceJSONResult doReview(String articleId, Integer passOrNot) {
+
+        Integer pendingStatus;//定义一个变量，后面用来承接，文章人工审核后，真正应该处于的状态；
+        // 1.根据passOrNot的结果，分别去处理；
+        if (passOrNot == YesOrNo.YES.type) {
+            //如果passOrNot是1，表示审核通过；那么，文章状态应该是：3：审核通过（已发布）;
+            pendingStatus = ArticleReviewStatus.SUCCESS.type;
+        } else if (passOrNot == YesOrNo.NO.type) {
+            //如果passOrNot是0，表示审核不通过；那么，文章状态应该是：4：审核未通过;
+            pendingStatus = ArticleReviewStatus.FAILED.type;
+        } else {
+            //如果passOrNot既不是1也不是0，就返回一个信息是"文章审核出错！"的GraceJSONResult；
+            return GraceJSONResult.errorCustom(ResponseStatusEnum.ARTICLE_REVIEW_ERROR);
+        }
+
+        // 保存到数据库，更改文章的状态为审核成功或者失败
+        articleService.updateArticleStatus(articleId, pendingStatus);
+
+        return GraceJSONResult.ok();
+    }
+
+    @Override
+    public GraceJSONResult delete(String userId, String articleId) {
+        articleService.deleteArticle(userId, articleId);
+        return GraceJSONResult.ok();
+    }
+
+    @Override
+    public GraceJSONResult withdraw(String userId, String articleId) {
+        articleService.withdrawArticle(userId, articleId);
+        return GraceJSONResult.ok();
     }
 }
