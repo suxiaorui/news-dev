@@ -2,7 +2,7 @@ package com.rui.utils;
 
 import com.aliyuncs.utils.Base64Helper;
 import com.rui.enums.FaceVerifyType;
-import com.rui.enums.extend.AliyunResource;
+import com.rui.utils.extend.AliyunResource;
 import com.rui.exception.GraceException;
 import com.rui.grace.result.ResponseStatusEnum;
 import org.apache.tomcat.util.codec.binary.Base64;
