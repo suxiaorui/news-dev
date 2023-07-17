@@ -1,5 +1,7 @@
 package com.rui.user.service;
 
+import com.rui.utils.PagedGridResult;
+
 /**
  * @Author suxiaorui
  * @Description TODO
@@ -26,5 +28,13 @@ public interface MyFanService {
      * 粉丝取消关注
      */
     public void unfollow(String writerId, String fanId);
+
+
+    /**
+     * 查询我的粉丝数
+     */
+    public PagedGridResult queryMyFansList(String writerId,
+                                           Integer page,
+                                           Integer pageSize);
 
 }

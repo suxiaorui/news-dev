@@ -42,4 +42,21 @@ public class MyFansController extends BaseController implements MyFansController
         myFanService.unfollow(writerId, fanId);
         return GraceJSONResult.ok();
     }
+
+    @Override
+    public GraceJSONResult queryAll(String writerId,
+                                    Integer page,
+                                    Integer pageSize) {
+
+        if (page == null) {
+            page = COMMON_START_PAGE;
+        }
+        if (pageSize == null) {
+            pageSize = COMMON_PAGE_SIZE;
+        }
+
+        return GraceJSONResult.ok(myFanService.queryMyFansList(writerId,
+                page,
+                pageSize));
+    }
 }

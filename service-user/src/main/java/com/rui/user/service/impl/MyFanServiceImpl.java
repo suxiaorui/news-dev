@@ -1,15 +1,19 @@
 package com.rui.user.service.impl;
 
+import com.github.pagehelper.PageHelper;
 import com.rui.api.service.BaseService;
 import com.rui.pojo.AppUser;
 import com.rui.pojo.Fans;
 import com.rui.user.mapper.FansMapper;
 import com.rui.user.service.MyFanService;
 import com.rui.user.service.UserService;
+import com.rui.utils.PagedGridResult;
 import org.n3r.idworker.Sid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * @Author suxiaorui
@@ -85,4 +89,17 @@ public class MyFanServiceImpl extends BaseService implements MyFanService {
         // redis 当前用户的（我的）关注数累减
         redis.decrement(REDIS_MY_FOLLOW_COUNTS + ":" + fanId, 1);
     }
+
+    @Override
+    public PagedGridResult queryMyFansList(String writerId,
+                                           Integer page,
+                                           Integer pageSize) {
+        Fans fans = new Fans();
+        fans.setWriterId(writerId);
+
+        PageHelper.startPage(page, pageSize);
+        List<Fans> list = fansMapper.select(fans);
+        return setterPagedGrid(list, page);
+    }
+
 }

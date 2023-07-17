@@ -3,6 +3,7 @@ package com.rui.api.controller.user;
 import com.rui.grace.result.GraceJSONResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,5 +35,14 @@ public interface MyFansControllerApi {
     @PostMapping("/unfollow")
     public GraceJSONResult unfollow(@RequestParam String writerId,
                                     @RequestParam String fanId);
+
+    @ApiOperation(value = "查询我的所有粉丝列表", notes = "查询我的所有粉丝列表", httpMethod = "POST")
+    @PostMapping("/queryAll")
+    public GraceJSONResult queryAll(
+            @RequestParam String writerId,
+            @ApiParam(name = "page", value = "查询下一页的第几页", required = false)
+            @RequestParam Integer page,
+            @ApiParam(name = "pageSize", value = "分页查询每一页显示的条数", required = false)
+            @RequestParam Integer pageSize);
 
 }
