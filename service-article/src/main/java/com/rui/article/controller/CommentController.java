@@ -5,6 +5,7 @@ import com.rui.api.controller.article.CommentControllerApi;
 import com.rui.article.service.CommentPortalService;
 import com.rui.grace.result.GraceJSONResult;
 import com.rui.pojo.bo.CommentReplyBO;
+import com.rui.utils.PagedGridResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,8 @@ import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import static com.rui.api.service.BaseService.REDIS_ARTICLE_COMMENT_COUNTS;
 
 /**
  * @Author suxiaorui
@@ -57,5 +60,31 @@ public class CommentController extends BaseController implements CommentControll
                 nickname);
 
         return GraceJSONResult.ok();
+    }
+
+    @Override
+    public GraceJSONResult commentCounts(String articleId) {
+
+        Integer counts =
+                getCountsFromRedis(REDIS_ARTICLE_COMMENT_COUNTS + ":" + articleId);
+
+        return GraceJSONResult.ok(counts);
+    }
+
+
+    @Override
+    public GraceJSONResult list(String articleId,
+                                Integer page,
+                                Integer pageSize) {
+
+        if (page == null) {
+            page = COMMON_START_PAGE;
+        }
+        if (pageSize == null) {
+            pageSize = COMMON_PAGE_SIZE;
+        }
+
+        PagedGridResult gridResult = commentPortalService.queryArticleComments(articleId, page, pageSize);
+        return GraceJSONResult.ok(gridResult);
     }
 }

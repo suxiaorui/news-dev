@@ -5,9 +5,7 @@ import com.rui.pojo.bo.CommentReplyBO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -27,5 +25,16 @@ public interface CommentControllerApi {
     @ApiOperation(value = "用户评论", notes = "用户评论", httpMethod = "POST")
     public GraceJSONResult createArticle(@RequestBody @Valid CommentReplyBO commentReplyBO,
                                          BindingResult result);
+
+
+    @GetMapping("counts")
+    @ApiOperation(value = "用户评论数查询", notes = "用户评论数查询", httpMethod = "GET")
+    public GraceJSONResult commentCounts(@RequestParam String articleId);
+
+    @GetMapping("list")
+    @ApiOperation(value = "查询文章的所有评论列表", notes = "查询文章的所有评论列表", httpMethod = "GET")
+    public GraceJSONResult list(@RequestParam String articleId,
+                                @RequestParam Integer page,
+                                @RequestParam Integer pageSize);
 
 }

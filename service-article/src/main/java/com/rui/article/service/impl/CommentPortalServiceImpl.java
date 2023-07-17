@@ -1,17 +1,24 @@
 package com.rui.article.service.impl;
 
+import com.github.pagehelper.PageHelper;
 import com.rui.api.service.BaseService;
 import com.rui.article.mapper.CommentsMapper;
+import com.rui.article.mapper.CommentsMapperCustom;
 import com.rui.article.service.ArticlePortalService;
 import com.rui.article.service.CommentPortalService;
 import com.rui.pojo.Comments;
 import com.rui.pojo.vo.ArticleDetailVO;
+import com.rui.pojo.vo.CommentsVO;
+import com.rui.utils.PagedGridResult;
 import org.n3r.idworker.Sid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Author suxiaorui
@@ -32,6 +39,9 @@ public class CommentPortalServiceImpl extends BaseService implements CommentPort
 
     @Autowired
     private CommentsMapper commentsMapper;
+
+    @Autowired
+    private CommentsMapperCustom commentsMapperCustom;
 
     @Transactional
     @Override
@@ -63,4 +73,19 @@ public class CommentPortalServiceImpl extends BaseService implements CommentPort
 
 
     }
+
+    @Override
+    public PagedGridResult queryArticleComments(String articleId,
+                                                Integer page,
+                                                Integer pageSize) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("articleId", articleId);
+
+        PageHelper.startPage(page, pageSize);
+        List<CommentsVO> list = commentsMapperCustom.queryArticleCommentList(map);
+        return setterPagedGrid(list, page);
+    }
+
+
+
 }

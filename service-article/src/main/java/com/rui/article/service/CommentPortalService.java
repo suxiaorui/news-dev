@@ -1,5 +1,7 @@
 package com.rui.article.service;
 
+import com.rui.utils.PagedGridResult;
+
 /**
  * @Author suxiaorui
  * @Description TODO
@@ -18,5 +20,13 @@ public interface CommentPortalService {
                               String content,
                               String userId,
                               String nickname);
+
+
+    /**
+     * 查询文章评论列表
+     */
+    public PagedGridResult queryArticleComments(String articleId,
+                                                Integer page,
+                                                Integer pageSize);
 
 }
