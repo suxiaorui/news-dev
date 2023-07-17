@@ -2,6 +2,7 @@ package com.rui.user.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.rui.api.service.BaseService;
+import com.rui.enums.Sex;
 import com.rui.pojo.AppUser;
 import com.rui.pojo.Fans;
 import com.rui.user.mapper.FansMapper;
@@ -100,6 +101,16 @@ public class MyFanServiceImpl extends BaseService implements MyFanService {
         PageHelper.startPage(page, pageSize);
         List<Fans> list = fansMapper.select(fans);
         return setterPagedGrid(list, page);
+    }
+
+    @Override
+    public Integer queryFansCounts(String writerId, Sex sex) {
+        Fans fans = new Fans();
+        fans.setWriterId(writerId);
+        fans.setSex(sex.type);
+
+        Integer count = fansMapper.selectCount(fans);
+        return count;
     }
 
 }

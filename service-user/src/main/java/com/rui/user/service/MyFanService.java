@@ -1,5 +1,6 @@
 package com.rui.user.service;
 
+import com.rui.enums.Sex;
 import com.rui.utils.PagedGridResult;
 
 /**
@@ -36,5 +37,10 @@ public interface MyFanService {
     public PagedGridResult queryMyFansList(String writerId,
                                            Integer page,
                                            Integer pageSize);
+
+    /**
+     * 查询粉丝数
+     */
+    public Integer queryFansCounts(String writerId, Sex sex);
 
 }

@@ -2,7 +2,9 @@ package com.rui.user.controller;
 
 import com.rui.api.BaseController;
 import com.rui.api.controller.user.MyFansControllerApi;
+import com.rui.enums.Sex;
 import com.rui.grace.result.GraceJSONResult;
+import com.rui.pojo.vo.FansCountsVO;
 import com.rui.user.service.MyFanService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,4 +61,18 @@ public class MyFansController extends BaseController implements MyFansController
                 page,
                 pageSize));
     }
+
+    @Override
+    public GraceJSONResult queryRatio(String writerId) {
+
+        int manCounts = myFanService.queryFansCounts(writerId, Sex.man);
+        int womanCounts = myFanService.queryFansCounts(writerId, Sex.woman);
+
+        FansCountsVO fansCountsVO = new FansCountsVO();
+        fansCountsVO.setManCounts(manCounts);
+        fansCountsVO.setWomanCounts(womanCounts);
+
+        return GraceJSONResult.ok(fansCountsVO);
+    }
+
 }
