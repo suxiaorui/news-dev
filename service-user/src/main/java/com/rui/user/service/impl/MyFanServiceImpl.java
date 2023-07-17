@@ -5,6 +5,7 @@ import com.rui.api.service.BaseService;
 import com.rui.enums.Sex;
 import com.rui.pojo.AppUser;
 import com.rui.pojo.Fans;
+import com.rui.pojo.vo.RegionRatioVO;
 import com.rui.user.mapper.FansMapper;
 import com.rui.user.service.MyFanService;
 import com.rui.user.service.UserService;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -111,6 +113,32 @@ public class MyFanServiceImpl extends BaseService implements MyFanService {
 
         Integer count = fansMapper.selectCount(fans);
         return count;
+    }
+
+    public static final String[] regions = {"北京", "天津", "上海", "重庆",
+            "河北", "山西", "辽宁", "吉林", "黑龙江", "江苏", "浙江", "安徽", "福建", "江西", "山东",
+            "河南", "湖北", "湖南", "广东", "海南", "四川", "贵州", "云南", "陕西", "甘肃", "青海", "台湾",
+            "内蒙古", "广西", "西藏", "宁夏", "新疆",
+            "香港", "澳门"};
+
+    @Override
+    public List<RegionRatioVO> queryRegionRatioCounts(String writerId) {
+        Fans fans = new Fans();
+        fans.setWriterId(writerId);
+
+        List<RegionRatioVO> list = new ArrayList<>();
+        for (String r : regions) {
+            fans.setProvince(r);
+            Integer count = fansMapper.selectCount(fans);
+
+            RegionRatioVO regionRatioVO = new RegionRatioVO();
+            regionRatioVO.setName(r);
+            regionRatioVO.setValue(count);
+
+            list.add(regionRatioVO);
+        }
+
+        return list;
     }
 
 }

@@ -1,7 +1,10 @@
 package com.rui.user.service;
 
 import com.rui.enums.Sex;
+import com.rui.pojo.vo.RegionRatioVO;
 import com.rui.utils.PagedGridResult;
+
+import java.util.List;
 
 /**
  * @Author suxiaorui
@@ -42,5 +45,12 @@ public interface MyFanService {
      * 查询粉丝数
      */
     public Integer queryFansCounts(String writerId, Sex sex);
+
+
+    /**
+     * 查询粉丝数
+     */
+    public List<RegionRatioVO> queryRegionRatioCounts(String writerId);
+
 
 }

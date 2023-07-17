@@ -49,4 +49,9 @@ public interface MyFansControllerApi {
     @PostMapping("/queryRatio")
     public GraceJSONResult queryRatio(@RequestParam String writerId);
 
+
+    @ApiOperation(value = "根据地域查询粉丝数量", notes = "根据地域查询粉丝数量", httpMethod = "POST")
+    @PostMapping("/queryRatioByRegion")
+    public GraceJSONResult queryRatioByRegion(@RequestParam String writerId);
+
 }
