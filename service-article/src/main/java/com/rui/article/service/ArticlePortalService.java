@@ -49,4 +49,6 @@ public interface ArticlePortalService {
      */
     public ArticleDetailVO queryDetail(String articleId);
 
+
+
 }
