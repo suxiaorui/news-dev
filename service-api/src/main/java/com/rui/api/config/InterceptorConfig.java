@@ -1,9 +1,6 @@
 package com.rui.api.config;
 
-import com.rui.api.interceptors.AdminTokenInterceptor;
-import com.rui.api.interceptors.PassportInterceptor;
-import com.rui.api.interceptors.UserActiveInterceptor;
-import com.rui.api.interceptors.UserTokenInterceptor;
+import com.rui.api.interceptors.*;
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,6 +33,11 @@ public class InterceptorConfig implements WebMvcConfigurer {
     }
 
     @Bean
+    public ArticleReadInterceptor articleReadInterceptor() {
+        return new ArticleReadInterceptor();
+    }
+
+    @Bean
     public AdminTokenInterceptor adminTokenInterceptor(){
         return new AdminTokenInterceptor();
     }
@@ -53,7 +55,9 @@ public class InterceptorConfig implements WebMvcConfigurer {
                 .addPathPatterns("/fs/uploadSomeFiles");
 
         registry.addInterceptor(userActiveInterceptor())
-                .addPathPatterns("/user/getAccountInfo");
+                .addPathPatterns("/fs/uploadSomeFiles")
+                .addPathPatterns("/fans/follow")
+                .addPathPatterns("/fans/unfollow");
 
         // 【查询admin用户名是否已存在，接口】是需要登录才能操作的；
         registry.addInterceptor(adminTokenInterceptor())
@@ -64,7 +68,12 @@ public class InterceptorConfig implements WebMvcConfigurer {
                 .addPathPatterns("/fs/readInGridFS")
                 .addPathPatterns("/friendLinkMng/saveOrUpdateFriendLink")
                 .addPathPatterns("/friendLinkMng/getFriendLinkList")
-                .addPathPatterns("/friendLinkMng/delete");
+                .addPathPatterns("/friendLinkMng/delete")
+                .addPathPatterns("/categoryMng/saveOrUpdateCategory")
+                .addPathPatterns("/categoryMng/getCatList");
+
+        registry.addInterceptor(articleReadInterceptor())
+                .addPathPatterns("/portal/article/readArticle");
 
     }
 }
