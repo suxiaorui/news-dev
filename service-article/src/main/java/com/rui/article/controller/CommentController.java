@@ -87,4 +87,26 @@ public class CommentController extends BaseController implements CommentControll
         PagedGridResult gridResult = commentPortalService.queryArticleComments(articleId, page, pageSize);
         return GraceJSONResult.ok(gridResult);
     }
+
+
+
+    @Override
+    public GraceJSONResult mng(String writerId, Integer page, Integer pageSize) {
+
+        if (page == null) {
+            page = COMMON_START_PAGE;
+        }
+        if (pageSize == null) {
+            pageSize = COMMON_PAGE_SIZE;
+        }
+
+        PagedGridResult gridResult = commentPortalService.queryWriterCommentsMng(writerId, page, pageSize);
+        return GraceJSONResult.ok(gridResult);
+    }
+
+    @Override
+    public GraceJSONResult delete(String writerId, String commentId) {
+        commentPortalService.deleteComment(writerId, commentId);
+        return GraceJSONResult.ok();
+    }
 }

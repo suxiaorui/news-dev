@@ -29,4 +29,14 @@ public interface CommentPortalService {
                                                 Integer page,
                                                 Integer pageSize);
 
+    /**
+     * 查询我的评论管理列表
+     */
+    public PagedGridResult queryWriterCommentsMng(String writerId, Integer page, Integer pageSize);
+
+
+    /**
+     * 删除评论
+     */
+    public void deleteComment(String writerId, String commentId);
 }

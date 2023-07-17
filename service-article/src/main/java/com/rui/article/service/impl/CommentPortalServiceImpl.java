@@ -86,6 +86,27 @@ public class CommentPortalServiceImpl extends BaseService implements CommentPort
         return setterPagedGrid(list, page);
     }
 
+    @Override
+    public PagedGridResult queryWriterCommentsMng(String writerId, Integer page, Integer pageSize) {
+
+        Comments comment = new Comments();
+        comment.setWriterId(writerId);
+
+        PageHelper.startPage(page, pageSize);
+        List<Comments> list = commentsMapper.select(comment);
+        return setterPagedGrid(list, page);
+    }
+
+
+    @Override
+    public void deleteComment(String writerId, String commentId) {
+        Comments comment = new Comments();
+        comment.setId(commentId);
+        comment.setWriterId(writerId);
+
+        commentsMapper.delete(comment);
+    }
+
 
 
 }
