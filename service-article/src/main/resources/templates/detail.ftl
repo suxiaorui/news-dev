@@ -79,7 +79,7 @@
             ${articleDetail.title}
         </div>
         <div class="read-counts">
-            阅读量：${articleDetail.readCounts}
+            阅读量：{{readCounts}}
         </div>
 
         <div class="detail-really">
@@ -283,16 +283,14 @@
             // 通过cookie判断用户是否登录
             app.judgeUserLoginStatus(me);
 
-
-            //查询文章详情
+            // 查询文章详情
             // var articleId = app.getUrlParam("articleId");
             // console.log(articleId);
-            // // this.articleId = articleId;
-            // // this.getArticleDetail(articleId);
+            // this.articleId = articleId;
+            // this.getArticleDetail(articleId);
 
             // 根据当前页面的名称，定义为文章的articleId，作为我们的静态化页面名称
             // 比如 1001.html, 200221.html
-            // var thisPage = app.getPageName();
             var thisPath = window.location.pathname;
             var pathArray = thisPath.split("/");
             var pageNameSuffix = pathArray[pathArray.length - 1];
@@ -344,14 +342,14 @@
                 axios.defaults.withCredentials = true;
                 axios.post(articleServerUrl + "/portal/article/readArticle?articleId=" + articleId)
                     .then(res => {
-                    // console.log(JSON.stringify(res.data));
+                        // console.log(JSON.stringify(res.data));
 
-                    if (res.data.status == 200) {
+                        if (res.data.status == 200) {
 
-                } else {
-                    console.log(res.data.msg);
-                }
-            });
+                        } else {
+                            console.log(res.data.msg);
+                        }
+                    });
             },
 
             // 获得文章阅读数
@@ -380,18 +378,18 @@
                 axios.defaults.withCredentials = true;
                 axios.get(articleServerUrl + "/portal/article/detail?articleId=" + articleId)
                     .then(res => {
-                    // console.log(JSON.stringify(res.data));
+                        // console.log(JSON.stringify(res.data));
 
-                    if (res.data.status == 200) {
-                    var result = res.data.data;
-                    me.articleDetail = result;
-                    console.log(JSON.stringify(me.articleDetail));
+                        if (res.data.status == 200) {
+                            var result = res.data.data;
+                            me.articleDetail = result;
+                            console.log(JSON.stringify(me.articleDetail));
 
-                    $("#pageTitle").html(result.title);
-                } else {
-                    alert(res.data.msg);
-                }
-            });
+                            $("#pageTitle").html(result.title);
+                        } else {
+                            alert(res.data.msg);
+                        }
+                    });
             },
 
             // 获得文章评论数
@@ -401,15 +399,15 @@
                 axios.defaults.withCredentials = true;
                 axios.get(articleServerUrl + "/comment/counts?articleId=" + me.articleId)
                     .then(res => {
-                    console.log(JSON.stringify(res.data));
+                        console.log(JSON.stringify(res.data));
 
-                if (res.data.status == 200) {
-                    var commentCounts = res.data.data;
-                    me.commentCounts = commentCounts;
-                } else {
-                    console.log(res.data.msg);
-                }
-            });
+                        if (res.data.status == 200) {
+                            var commentCounts = res.data.data;
+                            me.commentCounts = commentCounts;
+                        } else {
+                            console.log(res.data.msg);
+                        }
+                    });
             },
 
             // 获得文章的评论列表
@@ -421,24 +419,24 @@
                     "&page=" + page +
                     "&pageSize=" + pageSize)
                     .then(res => {
-                    console.log(JSON.stringify(res.data));
+                        console.log(JSON.stringify(res.data));
 
-                if (res.data.status == 200) {
-                    var grid = res.data.data;
-                    var commentList = grid.rows;
-                    me.commentList = commentList;
+                        if (res.data.status == 200) {
+                            var grid = res.data.data;
+                            var commentList = grid.rows;
+                            me.commentList = commentList;
 
-                    me.page = grid.page;  // 当前页数累加1，用于后续页面滚动分页
-                    var maxPage = grid.total; // 获得总页数
-                    var total = grid.records; // 获得总记录数
+                            me.page = grid.page;  // 当前页数累加1，用于后续页面滚动分页
+                            var maxPage = grid.total; // 获得总页数
+                            var total = grid.records; // 获得总记录数
 
-                    this.maxPage = maxPage;
-                    this.total = total;
+                            this.maxPage = maxPage;
+                            this.total = total;
 
-                } else {
-                    console.log(res.data.msg);
-                }
-            });
+                        } else {
+                            console.log(res.data.msg);
+                        }
+                    });
             },
 
             // 点击回复出现回复框
@@ -483,21 +481,21 @@
                     }
                 )
                     .then(res => {
-                    console.log(JSON.stringify(res.data));
+                        console.log(JSON.stringify(res.data));
 
-                if (res.data.status == 200) {
-                    // 清空评论框中内容
-                    $('#summernote').summernote('reset');
-                    $("#reply-to-" + fatherCommentId).val("");
+                        if (res.data.status == 200) {
+                            // 清空评论框中内容
+                            $('#summernote').summernote('reset');
+                            $("#reply-to-" + fatherCommentId).val("");
 
-                    // 重新查询评论与评论数
-                    me.getAllComments(1, 10);
-                    me.getCommentCounts();
-                } else {
-                    // alert(res.data.msg);
-                    alert(JSON.stringify(res.data.data));
-                }
-            });
+                            // 重新查询评论与评论数
+                            me.getAllComments(1, 10);
+                            me.getCommentCounts();
+                        } else {
+                            // alert(res.data.msg);
+                            alert(JSON.stringify(res.data.data));
+                        }
+                    });
             },
             // 用户回复其他用户的评论，点击后保存到后端
             replyToComment(fatherCommentId) {
@@ -517,16 +515,16 @@
                 axios.defaults.withCredentials = true;
                 axios.get(adminServerUrl + "/categoryMng/getCats")
                     .then(res => {
-                    console.log(JSON.stringify(res.data));
+                        console.log(JSON.stringify(res.data));
 
-                if (res.data.status == 200) {
-                    var catList = res.data.data;
-                    me.catList = catList;
-                    // console.log(catList);
-                } else {
-                    alert(res.data.msg);
-                }
-            });
+                        if (res.data.status == 200) {
+                            var catList = res.data.data;
+                            me.catList = catList;
+                            // console.log(catList);
+                        } else {
+                            alert(res.data.msg);
+                        }
+                    });
             },
             // 根据分类Id获得tag颜色
             getCatTagColor(catId) {

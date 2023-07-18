@@ -263,6 +263,11 @@ public class ArticlePortalController extends BaseController implements ArticlePo
     }
 
     @Override
+    public Integer readCounts(String articleId) {
+        return getCountsFromRedis(REDIS_ARTICLE_READ_COUNTS + ":" + articleId);
+    }
+
+    @Override
     public GraceJSONResult readArticle(String articleId, HttpServletRequest request) {
 
         String userIp = IPUtil.getRequestIp(request);
