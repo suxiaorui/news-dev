@@ -16,6 +16,7 @@
         <module>service-files</module>
         <module>service-admin</module>
         <module>service-article</module>
+        <module>service-article-html</module>
     </modules>
 
 

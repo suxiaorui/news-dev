@@ -9,6 +9,7 @@
         <module name="service-article" />
         <module name="common" />
         <module name="service-user" />
+        <module name="service-article-html" />
         <module name="service-files" />
         <module name="service-admin" />
         <module name="model" />
@@ -23,10 +24,11 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="common" options="-parameters" />
       <module name="model" options="-parameters" />
-      <module name="news-dev" options="-parameters" />
+      <module name="news-dev" options="" />
       <module name="service-admin" options="-parameters" />
       <module name="service-api" options="-parameters" />
       <module name="service-article" options="-parameters" />
+      <module name="service-article-html" options="-parameters" />
       <module name="service-files" options="-parameters" />
       <module name="service-user" options="-parameters" />
     </option>

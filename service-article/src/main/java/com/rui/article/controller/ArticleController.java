@@ -1,5 +1,6 @@
 package com.rui.article.controller;
 
+import com.mongodb.client.gridfs.GridFSBucket;
 import com.rui.api.BaseController;
 import com.rui.api.controller.article.ArticleControllerApi;
 import com.rui.article.service.ArticleService;
@@ -15,17 +16,21 @@ import com.rui.utils.JsonUtils;
 import com.rui.utils.PagedGridResult;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.InputStream;
 import java.io.Writer;
 import java.util.Date;
 import java.util.HashMap;
@@ -46,6 +51,9 @@ public class ArticleController extends BaseController implements ArticleControll
 
     @Autowired
     private ArticleService articleService;
+
+    @Autowired
+    private GridFSBucket gridFSBucket;
 
 
     @Override
@@ -195,7 +203,10 @@ public class ArticleController extends BaseController implements ArticleControll
         if (pendingStatus == ArticleReviewStatus.SUCCESS.type){
             // 审核成功，生成文章详情页静态html
             try {
-                createArticleHTML(articleId);
+//                createArticleHTML(articleId);
+                String articleMongoId = createArticleHTMLToGridFS(articleId);
+                // 存储到对应的文章，进行关联保存
+                articleService.updateArticleToGridFS(articleId, articleMongoId);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -234,6 +245,30 @@ public class ArticleController extends BaseController implements ArticleControll
         out.close();
     }
 
+
+
+
+    // 文章生成HTML
+    public String createArticleHTMLToGridFS(String articleId) throws Exception {
+
+        Configuration cfg = new Configuration(Configuration.getVersion());
+        String classpath = this.getClass().getResource("/").getPath();
+        cfg.setDirectoryForTemplateLoading(new File(classpath + "templates"));
+
+        Template template = cfg.getTemplate("detail.ftl", "utf-8");
+
+        // 获得文章的详情数据
+        ArticleDetailVO detailVO = getArticleDetail(articleId);
+        Map<String, Object> map = new HashMap<>();
+        map.put("articleDetail", detailVO);
+
+        String htmlContent = FreeMarkerTemplateUtils.processTemplateIntoString(template, map);
+//        System.out.println(htmlContent);
+
+        InputStream inputStream = IOUtils.toInputStream(htmlContent);
+        ObjectId fileId = gridFSBucket.uploadFromStream(detailVO.getId() + ".html",inputStream);
+        return fileId.toString();
+    }
 
     // 发起远程调用rest，获得文章详情数据
     public ArticleDetailVO getArticleDetail(String articleId) {
