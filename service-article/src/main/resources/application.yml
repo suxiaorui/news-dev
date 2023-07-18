@@ -41,7 +41,11 @@ spring:
     mongodb:
       uri: mongodb://root:root@192.168.47.132:27017
       database: rui-news
-
+  freemarker:
+    charset: UTF-8
+    content-type: text/html
+    suffix: .ftl
+    template-loader-path: classpath:/templates/
 ############################################################
 #
 # mybatis 配置
@@ -65,3 +69,9 @@ mapper:
 pagehelper:
   helperDialect: mysql
   supportMethodsArguments: true
+
+# 定义freemarker生成的html位置
+freemarker:
+  html:
+    target: D:\workspaces\freemarker_html
+    article: D:\apache-tomcat-8.5.72-windows-x64\apache-tomcat-8.5.72\webapps\imooc-news\portal\a

@@ -37,7 +37,7 @@ public class BaseController {
     public RedisOperator redis;
 
     @Autowired
-    private RestTemplate restTemplate;
+    public RestTemplate restTemplate;
 
     public static final String MOBILE_SMSCODE = "mobile:smscode";
     public static final String REDIS_USER_TOKEN = "redis_user_token";
