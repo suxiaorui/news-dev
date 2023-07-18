@@ -7,6 +7,7 @@ import com.rui.article.service.ArticleService;
 import com.rui.enums.ArticleCoverType;
 import com.rui.enums.ArticleReviewStatus;
 import com.rui.enums.YesOrNo;
+import com.rui.exception.GraceException;
 import com.rui.grace.result.GraceJSONResult;
 import com.rui.grace.result.ResponseStatusEnum;
 import com.rui.pojo.Category;
@@ -22,6 +23,7 @@ import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import org.springframework.validation.BindingResult;
@@ -207,6 +209,8 @@ public class ArticleController extends BaseController implements ArticleControll
                 String articleMongoId = createArticleHTMLToGridFS(articleId);
                 // 存储到对应的文章，进行关联保存
                 articleService.updateArticleToGridFS(articleId, articleMongoId);
+                // 调用消费端，执行下载html
+                doDownloadArticleHTML(articleId, articleMongoId);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -215,6 +219,22 @@ public class ArticleController extends BaseController implements ArticleControll
 
         return GraceJSONResult.ok();
     }
+
+    private void doDownloadArticleHTML(String articleId, String articleMongoId) {
+
+        String url =
+                "http://html.imoocnews.com:8002/article/html/download?articleId="
+                        + articleId +
+                        "&articleMongoId="
+                        + articleMongoId;
+        ResponseEntity<Integer> responseEntity = restTemplate.getForEntity(url, Integer.class);
+        int status = responseEntity.getBody();
+        System.out.println(status);
+        if (status != HttpStatus.OK.value()) {
+            GraceException.display(ResponseStatusEnum.ARTICLE_REVIEW_ERROR);
+        }
+    }
+
 
     @Value("${freemarker.html.article}")
     private String articlePath;

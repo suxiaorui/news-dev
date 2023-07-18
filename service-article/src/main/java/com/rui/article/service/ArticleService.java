@@ -27,6 +27,10 @@ public interface ArticleService {
      */
     public void updateAppointToPublish();
 
+    /**
+     * 更新单条文章为即时发布
+     */
+    public void updateArticleToPublish(String articleId);
 
     /**
      * 根据条件，分页查询当前登录用户的，文章列表；

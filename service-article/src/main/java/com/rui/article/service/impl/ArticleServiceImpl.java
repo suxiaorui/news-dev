@@ -1,6 +1,7 @@
 package com.rui.article.service.impl;
 
 import com.github.pagehelper.PageHelper;
+import com.mongodb.client.gridfs.GridFSBucket;
 import com.rui.api.service.BaseService;
 import com.rui.article.mapper.ArticleMapper;
 import com.rui.article.mapper.ArticleMapperCustom;
@@ -15,12 +16,17 @@ import com.rui.pojo.Article;
 import com.rui.pojo.Category;
 import com.rui.pojo.bo.NewArticleBO;
 import com.rui.utils.PagedGridResult;
+import com.rui.utils.extend.AliTextReviewUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.bson.types.ObjectId;
 import org.n3r.idworker.Sid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 import tk.mybatis.mapper.entity.Example;
 
 import java.lang.management.GarbageCollectorMXBean;
@@ -45,6 +51,10 @@ public class ArticleServiceImpl extends BaseService implements ArticleService {
 
     @Autowired
     private ArticleService articleService;
+
+
+    @Autowired
+    private AliTextReviewUtils aliTextReviewUtils;
 
     @Autowired
     private Sid sid;  //新增文章时，article表的主键，利用Sid生成；
@@ -125,6 +135,8 @@ public class ArticleServiceImpl extends BaseService implements ArticleService {
         articleMapper.updateByPrimaryKeySelective(pendingArticle);
     }
 
+
+
     @Transactional
     @Override
     public void updateAppointToPublish() {
@@ -132,6 +144,16 @@ public class ArticleServiceImpl extends BaseService implements ArticleService {
         articleMapperCustom.updateAppointToPublish();
 
     }
+
+    @Transactional
+    @Override
+    public void updateArticleToPublish(String articleId) {
+        Article article = new Article();
+        article.setId(articleId);
+        article.setIsAppoint(ArticleAppointType.IMMEDIATELY.type);
+        articleMapper.updateByPrimaryKeySelective(article);
+    }
+
 
     @Override
     public PagedGridResult queryMyArticleList(String userId,
@@ -233,6 +255,37 @@ public class ArticleServiceImpl extends BaseService implements ArticleService {
         if (result != 1) {
             GraceException.display(ResponseStatusEnum.ARTICLE_DELETE_ERROR);
         }
+
+        deleteHTML(articleId);
+    }
+
+    @Autowired
+    private GridFSBucket gridFSBucket;
+    /**
+     * 文章撤回删除后，删除静态化的html
+     */
+    private void deleteHTML(String articleId) {
+        // 1. 查询文章的mongoFileId
+        Article pending = articleMapper.selectByPrimaryKey(articleId);
+        String articleMongoId = pending.getMongoFileId();
+
+        // 2. 删除GridFS上的文件
+        gridFSBucket.delete(new ObjectId(articleMongoId));
+
+        // 3. 删除消费端的HTML文件
+        doDeleteArticleHTML(articleId);
+    }
+
+    @Autowired
+    public RestTemplate restTemplate;
+
+    private void doDeleteArticleHTML(String articleId) {
+        String url = "http://html.imoocnews.com:8002/article/html/delete?articleId=" + articleId;
+        ResponseEntity<Integer> responseEntity = restTemplate.getForEntity(url, Integer.class);
+        int status = responseEntity.getBody();
+        if (status != HttpStatus.OK.value()) {
+            GraceException.display(ResponseStatusEnum.SYSTEM_OPERATION_ERROR);
+        }
     }
 
     @Transactional
@@ -247,6 +300,8 @@ public class ArticleServiceImpl extends BaseService implements ArticleService {
         if (result != 1) {
             GraceException.display(ResponseStatusEnum.ARTICLE_WITHDRAW_ERROR);
         }
+
+        deleteHTML(articleId);
     }
 
     private Example makeExampleCriteria(String userId, String articleId) {
