@@ -2,6 +2,8 @@ package com.rui.article.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.mongodb.client.gridfs.GridFSBucket;
+import com.rui.api.config.RabbitMQConfig;
+import com.rui.api.config.RabbitMQDelayConfig;
 import com.rui.api.service.BaseService;
 import com.rui.article.mapper.ArticleMapper;
 import com.rui.article.mapper.ArticleMapperCustom;
@@ -15,11 +17,17 @@ import com.rui.grace.result.ResponseStatusEnum;
 import com.rui.pojo.Article;
 import com.rui.pojo.Category;
 import com.rui.pojo.bo.NewArticleBO;
+import com.rui.utils.DateUtil;
 import com.rui.utils.PagedGridResult;
 import com.rui.utils.extend.AliTextReviewUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.bson.types.ObjectId;
 import org.n3r.idworker.Sid;
+import org.springframework.amqp.AmqpException;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageDeliveryMode;
+import org.springframework.amqp.core.MessagePostProcessor;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -92,6 +100,44 @@ public class ArticleServiceImpl extends BaseService implements ArticleService {
         if (res != 1){//如果插入失败,就抛出一个信息是"创建文章失败，请重试或联系管理员！"的自定义异常;
             GraceException.display(ResponseStatusEnum.ARTICLE_CREATE_ERROR);
         }
+
+
+        // 发送延迟消息到mq，计算定时发布时间和当前时间的时间差，则为往后延迟的时间
+        if (article.getIsAppoint() == ArticleAppointType.TIMING.type) {
+
+            Date endDate = newArticleBO.getPublishTime();
+            Date startDate = new Date();
+
+//            int delayTimes = (int)(endDate.getTime() - startDate.getTime());
+
+            System.out.println(DateUtil.timeBetween(startDate, endDate));
+
+            // FIXME: 为了测试方便，写死20s
+            int delayTimes = 20 * 1000;
+
+            MessagePostProcessor messagePostProcessor = new MessagePostProcessor() {
+                @Override
+                public Message postProcessMessage(Message message) throws AmqpException {
+                    // 设置消息的持久
+                    message.getMessageProperties()
+                            .setDeliveryMode(MessageDeliveryMode.PERSISTENT);
+                    // 设置消息延迟的时间，单位ms毫秒
+                    message.getMessageProperties()
+                            .setDelay(delayTimes);
+                    return message;
+                }
+            };
+
+            rabbitTemplate.convertAndSend(
+                    RabbitMQDelayConfig.EXCHANGE_DELAY,
+                    "publish.delay.display",
+                    articleId,
+                    messagePostProcessor);
+
+            System.out.println("延迟消息-定时发布文章：" + new Date());
+        }
+
+
 
         // 通过阿里智能AI实现对文章文本的自动检测（自动审核）
 //        String reviewTextResult = aliTextReviewUtils.reviewTextContent(newArticleBO.getContent());
@@ -273,7 +319,8 @@ public class ArticleServiceImpl extends BaseService implements ArticleService {
         gridFSBucket.delete(new ObjectId(articleMongoId));
 
         // 3. 删除消费端的HTML文件
-        doDeleteArticleHTML(articleId);
+//        doDeleteArticleHTML(articleId);
+        doDeleteArticleHTMLByMQ(articleId);
     }
 
     @Autowired
@@ -286,6 +333,13 @@ public class ArticleServiceImpl extends BaseService implements ArticleService {
         if (status != HttpStatus.OK.value()) {
             GraceException.display(ResponseStatusEnum.SYSTEM_OPERATION_ERROR);
         }
+    }
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+    private void doDeleteArticleHTMLByMQ(String articleId) {
+        rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE_ARTICLE,
+                "article.html.download.do", articleId);
     }
 
     @Transactional
