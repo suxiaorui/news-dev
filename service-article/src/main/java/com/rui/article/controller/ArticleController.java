@@ -2,6 +2,7 @@ package com.rui.article.controller;
 
 import com.mongodb.client.gridfs.GridFSBucket;
 import com.rui.api.BaseController;
+import com.rui.api.config.RabbitMQConfig;
 import com.rui.api.controller.article.ArticleControllerApi;
 import com.rui.article.service.ArticleService;
 import com.rui.enums.ArticleCoverType;
@@ -22,6 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -209,8 +211,12 @@ public class ArticleController extends BaseController implements ArticleControll
                 String articleMongoId = createArticleHTMLToGridFS(articleId);
                 // 存储到对应的文章，进行关联保存
                 articleService.updateArticleToGridFS(articleId, articleMongoId);
+
                 // 调用消费端，执行下载html
-                doDownloadArticleHTML(articleId, articleMongoId);
+//                doDownloadArticleHTML(articleId, articleMongoId);
+
+                // 发送消息到mq队列，让消费者监听并且执行下载html
+                doDownloadArticleHTMLByMQ(articleId, articleMongoId);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -233,6 +239,17 @@ public class ArticleController extends BaseController implements ArticleControll
         if (status != HttpStatus.OK.value()) {
             GraceException.display(ResponseStatusEnum.ARTICLE_REVIEW_ERROR);
         }
+    }
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
+    private void doDownloadArticleHTMLByMQ(String articleId, String articleMongoId) {
+
+        rabbitTemplate.convertAndSend(
+                RabbitMQConfig.EXCHANGE_ARTICLE,
+                "article.download.do",
+                articleId + "," + articleMongoId);
     }
 
 
