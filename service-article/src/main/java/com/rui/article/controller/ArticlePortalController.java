@@ -16,6 +16,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
@@ -195,11 +197,27 @@ public class ArticlePortalController extends BaseController implements ArticlePo
         return null;
     }
 
+    // 注入服务发现，可以获得已经注册的服务相关信息
+    @Autowired
+    private DiscoveryClient discoveryClient;
+
 
     // 发起远程调用，获得用户的基本信息
     private List<AppUserVO> getPublisherList(Set idSet) {
+
+        String serviceId = "SERVICE-USER";
+        List<ServiceInstance> instanceList = discoveryClient.getInstances(serviceId);
+        ServiceInstance userService = instanceList.get(0);
+
         String userServerUrlExecute
-                = "http://user.imoocnews.com:8003/user/queryByIds?userIds=" + JsonUtils.objectToJson(idSet);
+                = "http://" + userService.getHost() +
+                ":"
+                + userService.getPort()
+                + "/user/queryByIds?userIds=" + JsonUtils.objectToJson(idSet);
+
+//        String userServerUrlExecute
+//                = "http://user.imoocnews.com:8003/user/queryByIds?userIds=" + JsonUtils.objectToJson(idSet);
+
         ResponseEntity<GraceJSONResult> responseEntity
                 = restTemplate.getForEntity(userServerUrlExecute, GraceJSONResult.class);
         GraceJSONResult bodyResult = responseEntity.getBody();
