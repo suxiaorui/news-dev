@@ -100,4 +100,5 @@ eureka:
     fetch-registry: true
     # 注册中心的服务地址
     service-url:
-      defaultZone: http://${eureka.server.hostname}:${eureka.server.port}/eureka/
+#      defaultZone: http://${eureka.server.hostname}:${eureka.server.port}/eureka/
+      defaultZone: http://eureka-cluster-7001:7001/eureka/,http://eureka-cluster-7002:7002/eureka/,http://eureka-cluster-7003:7003/eureka/
