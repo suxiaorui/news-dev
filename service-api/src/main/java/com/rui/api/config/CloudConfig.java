@@ -1,5 +1,6 @@
 package com.rui.api.config;
 
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.OkHttp3ClientHttpRequestFactory;
@@ -23,6 +24,7 @@ public class CloudConfig {
      * @return
      */
     @Bean
+    @LoadBalanced       // 默认的负载均衡算法：轮询
     public RestTemplate restTemplate() {
         return new RestTemplate(new OkHttp3ClientHttpRequestFactory());
     }

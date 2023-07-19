@@ -206,14 +206,17 @@ public class ArticlePortalController extends BaseController implements ArticlePo
     private List<AppUserVO> getPublisherList(Set idSet) {
 
         String serviceId = "SERVICE-USER";
-        List<ServiceInstance> instanceList = discoveryClient.getInstances(serviceId);
-        ServiceInstance userService = instanceList.get(0);
+//        List<ServiceInstance> instanceList = discoveryClient.getInstances(serviceId);
+//        ServiceInstance userService = instanceList.get(0);
 
         String userServerUrlExecute
-                = "http://" + userService.getHost() +
-                ":"
-                + userService.getPort()
-                + "/user/queryByIds?userIds=" + JsonUtils.objectToJson(idSet);
+                = "http://" + serviceId + "/user/queryByIds?userIds=" + JsonUtils.objectToJson(idSet);
+
+//        String userServerUrlExecute
+//                = "http://" + userService.getHost() +
+//                ":"
+//                + userService.getPort()
+//                + "/user/queryByIds?userIds=" + JsonUtils.objectToJson(idSet);
 
 //        String userServerUrlExecute
 //                = "http://user.imoocnews.com:8003/user/queryByIds?userIds=" + JsonUtils.objectToJson(idSet);

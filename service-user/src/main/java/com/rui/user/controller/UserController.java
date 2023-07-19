@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -111,8 +112,14 @@ public class UserController extends BaseController implements UserControllerApi 
         return GraceJSONResult.ok();
     }
 
+
+    @Value("${server.port}")
+    private String myPort;
+
     @Override
     public GraceJSONResult queryByIds(String userIds) {
+
+        System.out.println("myPort=" + myPort);
 
         if (StringUtils.isBlank(userIds)) {
             return GraceJSONResult.errorCustom(ResponseStatusEnum.USER_NOT_EXIST_ERROR);
