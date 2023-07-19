@@ -82,3 +82,13 @@ eureka:
   instance:
     lease-renewal-interval-in-seconds: 3      # 调整微服务（eureka client）和注册中心（eureka server）的心跳时间
     lease-expiration-duration-in-seconds: 5   # eureka 距离最近的一次心跳等待提出的时间，默认90s
+
+
+# 配置hystrix
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 2000   # 设置hystrix超时时间，超过2秒触发降级

@@ -1,5 +1,6 @@
 package com.rui.user.controller;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.rui.api.BaseController;
 import com.rui.api.controller.user.HelloControllerApi;
 import com.rui.api.controller.user.UserControllerApi;
@@ -116,8 +117,19 @@ public class UserController extends BaseController implements UserControllerApi 
     @Value("${server.port}")
     private String myPort;
 
+    @HystrixCommand(fallbackMethod = "queryByIdsFallback")
     @Override
     public GraceJSONResult queryByIds(String userIds) {
+
+        // 1. 手动触发异常
+        int a = 1 / 0;
+
+        // 2. 模拟超时异常
+//        try {
+//            Thread.sleep(6000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
 
         System.out.println("myPort=" + myPort);
 
@@ -137,6 +149,21 @@ public class UserController extends BaseController implements UserControllerApi 
         return GraceJSONResult.ok(publisherList);
 
     }
+
+    public GraceJSONResult queryByIdsFallback(String userIds) {
+
+        System.out.println("进入降级方法：queryByIdsFallback");
+
+        List<AppUserVO> publisherList = new ArrayList<>();
+        List<String> userIdList = JsonUtils.jsonToList(userIds, String.class);
+        for (String userId : userIdList) {
+            // 手动构建空对象，详情页所展示的用户信息可有可无
+            AppUserVO userVO = new AppUserVO();
+            publisherList.add(userVO);
+        }
+        return GraceJSONResult.ok(publisherList);
+    }
+
 
     private AppUserVO getBasicUserInfo(String userId) {
         // 1. 根据userId查询用户的信息
