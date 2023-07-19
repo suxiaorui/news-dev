@@ -35,3 +35,6 @@ eureka:
     # 单实例配置自己的服务地址，高可用集群则配置多个地址
     service-url:
       defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+  server:
+    enable-self-preservation: false   # 关闭eureka的自我保护功能
+    eviction-interval-timer-in-ms: 5000   # 清理无效节点的时间，可以缩短为5s，默认60s
