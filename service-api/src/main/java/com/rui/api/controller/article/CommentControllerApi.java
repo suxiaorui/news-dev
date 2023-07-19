@@ -24,8 +24,8 @@ public interface CommentControllerApi {
 
     @PostMapping("createComment")
     @ApiOperation(value = "用户评论", notes = "用户评论", httpMethod = "POST")
-    public GraceJSONResult createArticle(@RequestBody @Valid CommentReplyBO commentReplyBO,
-                                         BindingResult result);
+    public GraceJSONResult createArticle(@RequestBody @Valid CommentReplyBO commentReplyBO);
+//                                         BindingResult result);
 
 
     @GetMapping("counts")

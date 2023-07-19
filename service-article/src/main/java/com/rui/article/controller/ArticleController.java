@@ -61,15 +61,15 @@ public class ArticleController extends BaseController implements ArticleControll
 
 
     @Override
-    public GraceJSONResult createArticle(NewArticleBO newArticleBO,
-                                         BindingResult result) {
+    public GraceJSONResult createArticle(NewArticleBO newArticleBO){
+//                                         BindingResult result) {
 
         //0.判断BindingResult中是否保存了验证失败的错误信息，如果有，说明前端的输入是有问题的(用户名或者密码，至少有一个没输入)；
         // 那么，我们就获取这个错误信息，并构建一个GraceJSONResult统一返回对象，返回；
-        if (result.hasErrors()) {
-            Map<String, String> map = getErrorsFromBindingResult(result);
-            return GraceJSONResult.errorMap(map);
-        }
+//        if (result.hasErrors()) {
+//            Map<String, String> map = getErrorsFromBindingResult(result);
+//            return GraceJSONResult.errorMap(map);
+//        }
 
         /**
          * 1.判断"文章封面类型"(即NewArticleBO类的articleType字段):

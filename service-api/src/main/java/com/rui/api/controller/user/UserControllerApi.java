@@ -37,8 +37,10 @@ public interface UserControllerApi {
 
     @ApiOperation(value = "修改/完善用户信息", notes = "修改/完善用户信息", httpMethod = "POST")
     @PostMapping("/updateUserInfo")
-    public GraceJSONResult updateUserInfo(@RequestBody @Valid UpdateUserInfoBO updateUserInfoBO,
-                                   @RequestParam BindingResult result);
+    public GraceJSONResult updateUserInfo(
+            @RequestBody @Valid UpdateUserInfoBO updateUserInfoBO);
+//    public GraceJSONResult updateUserInfo(@RequestBody @Valid UpdateUserInfoBO updateUserInfoBO,
+//                                   @RequestParam BindingResult result);
 
 
     @ApiOperation(value = "根据用户的ids查询用户列表", notes = "根据用户的ids查询用户列表", httpMethod = "GET")

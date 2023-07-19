@@ -36,13 +36,13 @@ public class FriendLinkController extends BaseController implements FriendLinkCo
 
     @Override
     public GraceJSONResult saveOrUpdateFriendLink(
-            @Valid SaveFriendLinkBO saveFriendLinkBO,
-            BindingResult result) {
+            @Valid SaveFriendLinkBO saveFriendLinkBO){
+//            BindingResult result) {
 
-        if (result.hasErrors()) {
-            Map<String, String> map = getErrors(result);
-            return GraceJSONResult.errorMap(map);
-        }
+//        if (result.hasErrors()) {
+//            Map<String, String> map = getErrors(result);
+//            return GraceJSONResult.errorMap(map);
+//        }
 
 //        saveFriendLinkBO -> ***MO
 

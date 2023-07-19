@@ -35,14 +35,14 @@ public class CommentController extends BaseController implements CommentControll
     private CommentPortalService commentPortalService;
 
     @Override
-    public GraceJSONResult createArticle(@Valid CommentReplyBO commentReplyBO,
-                                         BindingResult result) {
+    public GraceJSONResult createArticle(@Valid CommentReplyBO commentReplyBO){
+//                                         BindingResult result) {
 
         // 0. 判断BindingResult是否保存错误的验证信息，如果有，则直接return
-        if (result.hasErrors()) {
-            Map<String, String> errorMap = getErrors(result);
-            return GraceJSONResult.errorMap(errorMap);
-        }
+//        if (result.hasErrors()) {
+//            Map<String, String> errorMap = getErrors(result);
+//            return GraceJSONResult.errorMap(errorMap);
+//        }
 
         // 1. 根据留言用户的id查询他的昵称，用于存入到数据表进行字段的冗余处理，从而避免多表关联查询的性能影响
         String userId = commentReplyBO.getCommentUserId();

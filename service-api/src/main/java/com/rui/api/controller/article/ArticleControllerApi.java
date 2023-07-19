@@ -29,13 +29,12 @@ public interface ArticleControllerApi {
     /**
      * 【发表文章，接口】
      * @param newArticleBO：使用NewArticleBO来承接文章数据；
-     * @param result
      * @return
      */
     @ApiOperation(value = "用户发表文章", notes = "用户发表文章", httpMethod = "POST")
     @PostMapping("/createArticle") //设置路由，这个是需要前后端约定好的；
-    public GraceJSONResult createArticle(@RequestBody @Valid NewArticleBO newArticleBO,
-                                      BindingResult result);
+    public GraceJSONResult createArticle(@RequestBody @Valid NewArticleBO newArticleBO);
+//                                      BindingResult result);
 
     /**
      * 根据条件，分页查询当前登录用户的，文章列表，接口；
