@@ -2,6 +2,7 @@ package com.rui.article.controller;
 
 import com.rui.api.BaseController;
 import com.rui.api.controller.article.ArticlePortalControllerApi;
+import com.rui.api.controller.user.UserControllerApi;
 import com.rui.article.service.ArticlePortalService;
 import com.rui.grace.result.GraceJSONResult;
 import com.rui.pojo.Article;
@@ -201,16 +202,20 @@ public class ArticlePortalController extends BaseController implements ArticlePo
     @Autowired
     private DiscoveryClient discoveryClient;
 
+    @Autowired
+    private UserControllerApi userControllerApi;
 
     // 发起远程调用，获得用户的基本信息
     private List<AppUserVO> getPublisherList(Set idSet) {
 
-        String serviceId = "SERVICE-USER";
+//        String serviceId = "SERVICE-USER";
 //        List<ServiceInstance> instanceList = discoveryClient.getInstances(serviceId);
 //        ServiceInstance userService = instanceList.get(0);
 
-        String userServerUrlExecute
-                = "http://" + serviceId + "/user/queryByIds?userIds=" + JsonUtils.objectToJson(idSet);
+//        String userServerUrlExecute
+//                = "http://" + serviceId + "/user/queryByIds?userIds=" + JsonUtils.objectToJson(idSet);
+
+        GraceJSONResult bodyResult = userControllerApi.queryByIds(JsonUtils.objectToJson(idSet));
 
 //        String userServerUrlExecute
 //                = "http://" + userService.getHost() +
@@ -221,9 +226,9 @@ public class ArticlePortalController extends BaseController implements ArticlePo
 //        String userServerUrlExecute
 //                = "http://user.imoocnews.com:8003/user/queryByIds?userIds=" + JsonUtils.objectToJson(idSet);
 
-        ResponseEntity<GraceJSONResult> responseEntity
-                = restTemplate.getForEntity(userServerUrlExecute, GraceJSONResult.class);
-        GraceJSONResult bodyResult = responseEntity.getBody();
+//        ResponseEntity<GraceJSONResult> responseEntity
+//                = restTemplate.getForEntity(userServerUrlExecute, GraceJSONResult.class);
+//        GraceJSONResult bodyResult = responseEntity.getBody();
         List<AppUserVO> publisherList = null;
         if (bodyResult.getStatus() == 200) {
             String userJson = JsonUtils.objectToJson(bodyResult.getData());
