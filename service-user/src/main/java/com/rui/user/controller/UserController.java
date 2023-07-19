@@ -1,5 +1,6 @@
 package com.rui.user.controller;
 
+import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.rui.api.BaseController;
 import com.rui.api.controller.user.HelloControllerApi;
@@ -37,12 +38,18 @@ import java.util.Map;
  */
 
 @RestController
+@DefaultProperties(defaultFallback = "defaultFallback")
 public class UserController extends BaseController implements UserControllerApi {
 
     final static Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     private UserService userService;
+
+    public GraceJSONResult defaultFallback() {
+        System.out.println("全局降级");
+        return GraceJSONResult.errorCustom(ResponseStatusEnum.SYSTEM_ERROR_GLOBAL);
+    }
 
     @Override
     public GraceJSONResult getUserInfo(String userId) {
@@ -117,12 +124,12 @@ public class UserController extends BaseController implements UserControllerApi 
     @Value("${server.port}")
     private String myPort;
 
-    @HystrixCommand(fallbackMethod = "queryByIdsFallback")
+    @HystrixCommand //(fallbackMethod = "queryByIdsFallback")
     @Override
     public GraceJSONResult queryByIds(String userIds) {
 
         // 1. 手动触发异常
-        int a = 1 / 0;
+//        int a = 1 / 0;
 
         // 2. 模拟超时异常
 //        try {
