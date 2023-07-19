@@ -17,6 +17,7 @@
         <module>service-admin</module>
         <module>service-article</module>
         <module>service-article-html</module>
+        <module>springcloud-eureka</module>
     </modules>
 
 
