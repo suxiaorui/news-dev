@@ -121,6 +121,15 @@ ribbon:
   # 如果当前重试失败1次，则会切换到访问集群中的下一个微服务实例，切换最大为2次
 
 
-#logging:
-#  level:
+logging:
+  level:
+    com.rui.api.controller.user.UserControllerApi: debug
 #    root: debug
+
+# 配置feign
+feign:
+  client:
+    config:
+      # 配置服务提供方的名称
+      service-user:
+        loggerLevel: FULL
