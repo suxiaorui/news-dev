@@ -1,4 +1,4 @@
-package com.rui.eueka.controller;
+package com.rui.eureka.controller;
 
 import com.rui.api.controller.user.HelloControllerApi;
 import com.rui.grace.result.GraceJSONResult;
