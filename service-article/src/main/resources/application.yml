@@ -107,6 +107,20 @@ eureka:
     lease-expiration-duration-in-seconds: 5   # eureka 距离最近的一次心跳等待提出的时间，默认90s
 
 # 配置指定自定义的ribbon规则
-SERVICE-USER:
-  ribbon:
-    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule
+#SERVICE-USER:
+#  ribbon:
+#    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule
+
+
+ribbon:
+  ConnectTimeout: 5000          # 创建连接的超时时间，单位：ms
+  ReadTimeout: 5000             # 在连接创建好以后，调用接口的超时时间，单位：ms
+  MaxAutoRetries: 1             # 最大重试次数
+  MaxAutoRetriesNextServer: 2   # 切换到下个微服务实例的重试次数
+  # 当请求到某个微服务5s，超时后会进行重试，先重试连接自己当前的这个实例
+  # 如果当前重试失败1次，则会切换到访问集群中的下一个微服务实例，切换最大为2次
+
+
+#logging:
+#  level:
+#    root: debug
