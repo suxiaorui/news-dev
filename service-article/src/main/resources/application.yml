@@ -52,6 +52,16 @@ spring:
     username: admin
     password: admin
     virtual-host: news-dev
+  cloud:
+    stream:
+      bindings: # 绑定通道和交换机
+        myOutput: # 定义生产者的通道
+          # 自定义交换机的名字，也就是代码里构建的消息，交给底层mq的交换机
+          destination: streamExchange
+        myInput: # 定义消费者的通道
+          # 自定义交换机的名字，也就是消息从底层mq输入到消费端进行消费
+          destination: streamExchange
+          group: boys
 ############################################################
 #
 # mybatis 配置

@@ -22,15 +22,6 @@ spring:
     host: 192.168.47.132
     port: 6379
     password: 123321
-  cloud:
-    config:
-      label: master
-      name: zuul
-      profile: dev
-      #      uri: http://192.168.47.1:7080
-      discovery:
-        enabled: true
-        service-id: springcloud-config
 
 ############################################################
 #
@@ -53,22 +44,17 @@ zuul:
   routes:
     # 由于路由id和微服务实例id相同，我们可以简化转发的配置
     service-article: /service-article/**
-#      service-article:                  # 配置微服务的路由id，微服务的实例id
-#        path: /service-article/**       # 请求路径(前缀)
-#        service-id: service-article     # 请求转发的微服务实例id
-  #      url: http://192.168.1.2:8001    # 请求转发到指定的微服务所在的ip地址
-  prefix: /api                       # 请求前缀
-
-## ip请求限制的参数配置
-#blackIp:
-#  continueCounts: ${counts:10}    # ip连续请求的次数
-#  timeInterval: ${interval:10}    # ip判断的事件间隔，单位：秒
-#  limitTimes: ${times:15}         # 限制的事件，单位：秒
+  #    service-article:                  # 配置微服务的路由id，微服务的实例id
+#      path: /service-article/**       # 请求路径(前缀)
+#      service-id: service-article     # 请求转发的微服务实例id
+#      url: http://192.168.1.2:8001    # 请求转发到指定的微服务所在的ip地址
+  prefix: /api                        # 请求前缀
 
 
-# 配置动态刷新git配置的路径终端请求地址
-management:
-  endpoints:
-    web:
-      exposure:
-        include: refresh
+
+# ip请求限制的参数配置
+blackIp:
+  continueCounts: ${counts:10}    # ip连续请求的次数
+  timeInterval: ${interval:10}    # ip判断的事件间隔，单位：秒
+  limitTimes: ${times:15}         # 限制的事件，单位：秒
+

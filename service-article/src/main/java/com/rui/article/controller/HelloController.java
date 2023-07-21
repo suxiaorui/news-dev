@@ -3,6 +3,7 @@ package com.rui.article.controller;
 import com.rui.api.config.RabbitMQConfig;
 import com.rui.api.config.RabbitMQDelayConfig;
 import com.rui.api.controller.user.HelloControllerApi;
+import com.rui.article.stream.StreamService;
 import com.rui.grace.result.GraceJSONResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +33,22 @@ public class HelloController {
 
     @Autowired
     private RabbitTemplate rabbitTemplate;
+
+    @Autowired
+    private StreamService streamService;
+
+    @GetMapping("/stream")
+    public Object stream() {
+        streamService.sendMsg();
+
+        for (int i = 0 ; i < 10 ; i ++ ) {
+            streamService.eat("我吃了第" + (i+1) + "只饺子~");
+        }
+
+        return "ok~~!!!";
+    }
+
+
 
     @GetMapping("/hello")
     public Object hello() {
