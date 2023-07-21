@@ -14,6 +14,7 @@
         <module name="springcloud-eureka-cluster" />
         <module name="service-files" />
         <module name="service-admin" />
+        <module name="springcloud-zuul-server" />
         <module name="model" />
         <module name="service-api" />
       </profile>
@@ -26,7 +27,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="common" options="-parameters" />
       <module name="model" options="-parameters" />
-      <module name="news-dev" options="-parameters" />
+      <module name="news-dev" options="" />
       <module name="service-admin" options="-parameters" />
       <module name="service-api" options="-parameters" />
       <module name="service-article" options="-parameters" />
@@ -35,6 +36,7 @@
       <module name="service-user" options="-parameters" />
       <module name="springcloud-eureka" options="-parameters" />
       <module name="springcloud-eureka-cluster" options="-parameters" />
+      <module name="springcloud-zuul-server" options="-parameters" />
     </option>
   </component>
 </project>
