@@ -38,3 +38,8 @@ eureka:
   server:
     enable-self-preservation: false   # 关闭eureka的自我保护功能
     eviction-interval-timer-in-ms: 5000   # 清理无效节点的时间，可以缩短为5s，默认60s
+
+blcakIp:
+  continueCounts: 10
+  timeInterval: 10
+  limitTimes: 15
