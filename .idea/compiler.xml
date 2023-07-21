@@ -16,6 +16,7 @@
         <module name="service-admin" />
         <module name="springcloud-zuul-server" />
         <module name="model" />
+        <module name="springcloud-config" />
         <module name="service-api" />
       </profile>
     </annotationProcessing>
@@ -34,6 +35,7 @@
       <module name="service-article-html" options="-parameters" />
       <module name="service-files" options="-parameters" />
       <module name="service-user" options="-parameters" />
+      <module name="springcloud-config" options="-parameters" />
       <module name="springcloud-eureka" options="-parameters" />
       <module name="springcloud-eureka-cluster" options="-parameters" />
       <module name="springcloud-zuul-server" options="-parameters" />
