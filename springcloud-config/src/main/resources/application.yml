@@ -17,6 +17,15 @@ server:
 spring:
   application:
     name: springcloud-config
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://gitee.com/suxiaorui109/news-config.git
+          force-pull: true
+          username: zs
+          password: 123
+
 
 
 ############################################################
