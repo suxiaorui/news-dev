@@ -64,3 +64,11 @@ zuul:
 #  continueCounts: ${counts:10}    # ip连续请求的次数
 #  timeInterval: ${interval:10}    # ip判断的事件间隔，单位：秒
 #  limitTimes: ${times:15}         # 限制的事件，单位：秒
+
+
+# 配置动态刷新git配置的路径终端请求地址
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh
