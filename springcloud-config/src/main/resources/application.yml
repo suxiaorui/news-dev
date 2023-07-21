@@ -19,13 +19,18 @@ spring:
     name: springcloud-config
   cloud:
     config:
-
       server:
         git:
           uri: https://gitee.com/suxiaorui109/news-config.git
           force-pull: true
           username: zs
           password: 123
+  rabbitmq:
+    host: 192.168.47.132
+    port: 5672
+    username: admin
+    password: admin
+    virtual-host: news-dev
 
 
 
@@ -44,3 +49,11 @@ eureka:
     service-url:
       #defaultZone: http://${eureka.server.hostname}:${eureka.server.port}/eureka/
       defaultZone: http://eureka-cluster-7001:7001/eureka/,http://eureka-cluster-7002:7002/eureka/,http://eureka-cluster-7003:7003/eureka/
+
+
+# 配置动态刷新git配置的路径终端请求地址
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
